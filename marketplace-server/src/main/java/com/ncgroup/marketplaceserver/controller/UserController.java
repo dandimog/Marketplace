@@ -118,7 +118,7 @@ public class UserController  {
     @PostMapping("/setnewpassword/{id}")
     public ResponseEntity<UserDto> setNewPassword(@RequestBody String password, @PathVariable long id) {
         userService.setNewPassword(id, password);
-        User user = userService.findUserById(user.getId());
+        User user = userService.findUserById(id);
         UserPrincipal userPrincipal = new UserPrincipal(user);
         HttpHeaders jwtHeader = getJwtHeader(userPrincipal);
         return new ResponseEntity<>(UserDto.convertToDto(user), jwtHeader, OK);
