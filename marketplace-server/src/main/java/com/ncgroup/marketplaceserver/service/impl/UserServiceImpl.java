@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	public UserDto enableUser(String link) {
 		User user = validateAuthLink(link);
 		userRepository.enableUser(link);
-		return UserDto.convertToDto(user);
+		return user != null ? UserDto.convertToDto(user) : null;
 	}
 	
 	@Override
@@ -165,7 +165,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	public void resetPassword(String email) throws EmailNotFoundException {
 		User user = userRepository.findByEmail(email);
 		if(user == null) {
-			log.info(email);			throw new EmailNotFoundException(MessageFormat.format(ExceptionMessage.USERNAME_NOT_FOUND, email));
+			log.info(email);			
+			throw new EmailNotFoundException(MessageFormat.format(ExceptionMessage.USERNAME_NOT_FOUND, email));
 		}
 		
 		String auth_link = emailSenderService.sendSimpleEmailPasswordRecovery(email);
@@ -226,10 +227,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	private User validateAuthLink(String link) {
 		User user = userRepository.findByAuthLink(link);
 		if(user == null) {
-			throw new LinkNotValidException(ExceptionMessage.LINK_NOT_VALID);
+			return null;
 		}
 		if(user.getAuthLinkDate().isBefore(LocalDateTime.now().minusHours(LINK_VALID_TIME_HOUR))) {
-			throw new LinkExpiredException(ExceptionMessage.LINK_EXPIRED);
+			return null;
 		}
 		return user;
 	}
@@ -244,8 +245,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 	
 	private boolean validatePasswordPattern(String password) {
-		//return password.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])$");
-		return true;
+		int count = 0;
+
+		   if( 6 <= password.length() && password.length() <= 32  )
+		   {
+		      if(password.matches(".*[a-z].*")) {
+		         count ++;
+		      }
+		      if( password.matches(".*[A-Z].*") ) {
+		         count ++;
+		      }
+		      if( password.matches(".*[0-9].*") ) {
+		         count ++;
+		      }
+		   }
+
+		   return count >= 3;
 	}
 	
 	

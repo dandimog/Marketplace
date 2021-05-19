@@ -49,13 +49,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
         http.csrf().disable().cors().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests()
-                .antMatchers("/register", "/login","/confirm-account").permitAll()
+                .antMatchers("/api/register", "/api/login","/api/confirm-account").permitAll()
                 .antMatchers("/reset-password").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler)
-                .authenticationEntryPoint(authenticationFilter)
-                .and()
+                //.exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler)
+                //.authenticationEntryPoint(authenticationFilter)
+                //.and()
                 .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
     }
     

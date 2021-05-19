@@ -1,19 +1,28 @@
 package com.ncgroup.marketplaceserver.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.node.TextNode;
+import com.ncgroup.marketplaceserver.exception.constants.ExceptionMessage;
+import com.ncgroup.marketplaceserver.exception.domain.EmailNotValidException;
 import com.ncgroup.marketplaceserver.model.User;
 import com.ncgroup.marketplaceserver.model.dto.LoginUserDto;
 import com.ncgroup.marketplaceserver.model.dto.UserDto;
@@ -26,16 +35,25 @@ import lombok.extern.slf4j.Slf4j;
 
 import static org.springframework.http.HttpStatus.OK;
 
+import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
 @Slf4j
 @RestController
+@RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class UserController  {
     private AuthenticationManager authenticationManager;
     private UserService userService;
     private JwtProvider jwtProvider;
+    
+    @Value("${url.confirm-account.redirect}")
+    private String redirectConfirmAccountUrl;
+    
 
     @Autowired
     public UserController(AuthenticationManager authenticationManager, UserService userService, JwtProvider jwtProvider) {
@@ -46,6 +64,11 @@ public class UserController  {
 
     @PostMapping("/login")
     public ResponseEntity<UserDto> login(@Valid @RequestBody LoginUserDto user) {
+    	/*try {
+    	authenticate(user.getEmail(), user.getPassword());
+    	} catch (Throwable e) {
+			e.printStackTrace();	
+    	}*/
     	authenticate(user.getEmail(), user.getPassword());
         User loginUser = userService.findUserByEmail(user.getEmail());
         UserPrincipal userPrincipal = new UserPrincipal(loginUser);
@@ -62,10 +85,15 @@ public class UserController  {
     }
     
     @GetMapping("/confirm-account")
-    public ResponseEntity<UserDto> activate(@RequestParam(name = "token") String link) {
+    public ResponseEntity<Void> activate(@RequestParam(name = "token") String link) {
         UserDto newUser = userService.enableUser(link);
-        return new ResponseEntity<>(newUser, OK);
+        if(newUser == null) {
+        	return ResponseEntity.status(HttpStatus.OK).location(URI.create(redirectConfirmAccountUrl)).build();
+        } else {
+        	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).location(URI.create(redirectConfirmAccountUrl)).build();
+        }
     }
+
     
     @PostMapping("/reset-password")
     public ResponseEntity<Void> resetPassword(@RequestBody TextNode email) {
@@ -78,6 +106,13 @@ public class UserController  {
         userService.setNewPassword(link, password);
         return ResponseEntity.noContent().build();
     }
+    
+    @GetMapping("/list")
+    public ResponseEntity<List<UserDto>> findAllUsers() {
+    	List<UserDto> users = userService.getUsers();
+        return new ResponseEntity<>(users, OK);
+    }
+    
     
     /*@PostMapping("/add")
     public ResponseEntity<User> addUser(@RequestBody User user) {
@@ -113,4 +148,6 @@ public class UserController  {
     private void authenticate(String email, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
     }
+    
+    
 }

@@ -1,6 +1,9 @@
 package com.ncgroup.marketplaceserver.repository.impl;
 
+import java.sql.SQLException;
 import java.util.List;
+
+import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +31,7 @@ public class UserRepositoryImpl implements UserRepository {
 
 	private JdbcTemplate jdbcTemplate;
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	private DataSource dataSource;
 	
 	@Value("${user.find-all}")
 	private String findAllQuery;
@@ -62,11 +66,16 @@ public class UserRepositoryImpl implements UserRepository {
 	@Value("${user.update-password}")
 	private String updatePasswordQuery;
 	
+	@Value("${user.delete-auth-link}")
+	private String deleteAuthLinkQuery;
+	
 	
 	@Autowired
-	public UserRepositoryImpl(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+	public UserRepositoryImpl(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+			DataSource dataSource) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+		this.dataSource = dataSource;
 	}
 	
 	/*Returns User if exists or else null*/
@@ -74,7 +83,6 @@ public class UserRepositoryImpl implements UserRepository {
 	public User findByEmail(String email) {
 		Object[] params = {email};
 		List<User> users = jdbcTemplate.query(findByEmailQuery, new UserRowMapper(), params);
-		log.info("FIND USER BY EMAIL");
 		return users.isEmpty() ? null : users.get(0);
 	}
 
@@ -156,6 +164,7 @@ public class UserRepositoryImpl implements UserRepository {
 	@Override
 	public void enableUser(String link) {
 		jdbcTemplate.update(enableUserQuery, new Object[] {link});
+		jdbcTemplate.update(deleteAuthLinkQuery, new Object[] {link});
 	}
 
 	
