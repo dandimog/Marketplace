@@ -105,8 +105,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 	
 	@Override
-	public void setNewPassword(String link, String newPassword) {
-		User user = validateAuthLink(link);
+	public void setNewPassword(long id, String newPassword) {
+		//User user = validateAuthLink(link);
+		User user = findUserById(id);
 		validatePasswordPattern(newPassword);
 		if(user.getPassword().equals(newPassword)) {
 			throw new PasswordNotValidException(ExceptionMessage.SAME_PASSWORD);

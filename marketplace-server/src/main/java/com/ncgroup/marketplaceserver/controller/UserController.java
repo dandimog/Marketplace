@@ -54,6 +54,9 @@ public class UserController  {
     @Value("${url.confirm-account.redirect}")
     private String redirectConfirmAccountUrl;
     
+    @Value("${url.reset-password.redirect}")
+    private String redirectResetPasswordUrl;
+    
 
     @Autowired
     public UserController(AuthenticationManager authenticationManager, UserService userService, JwtProvider jwtProvider) {
@@ -101,10 +104,24 @@ public class UserController  {
         return ResponseEntity.noContent().build();
     }
     
-    @PostMapping("/setnewpassword/{link}")
-    public ResponseEntity<UserDto> setNewPassword(@RequestBody String password, @PathVariable String link) {
-        userService.setNewPassword(link, password);
-        return ResponseEntity.noContent().build();
+    @PostMapping("/confirm-passreset/{link}")
+    public ResponseEntity<UserDto> confirmPassReset(@PathVariable String link) {
+    	UserDto user = userService.enableUser(link);
+    	if(user == null) {
+        	return ResponseEntity.status(HttpStatus.OK).location(URI.create(redirectResetPasswordUrl+"/"+user.getId())).build();
+        } else {
+        	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).location(URI.create(redirectResetPasswordUrl+user.getId())).build();
+        }
+    }
+    
+    
+    @PostMapping("/setnewpassword/{id}")
+    public ResponseEntity<UserDto> setNewPassword(@RequestBody String password, @PathVariable long id) {
+        userService.setNewPassword(id, password);
+        User user = userService.findUserById(user.getId());
+        UserPrincipal userPrincipal = new UserPrincipal(user);
+        HttpHeaders jwtHeader = getJwtHeader(userPrincipal);
+        return new ResponseEntity<>(UserDto.convertToDto(user), jwtHeader, OK);
     }
     
     @GetMapping("/list")

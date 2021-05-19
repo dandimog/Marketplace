@@ -69,6 +69,14 @@ public class UserRepositoryImpl implements UserRepository {
 	@Value("${user.delete-auth-link}")
 	private String deleteAuthLinkQuery;
 	
+	@Value("${user.delete-by-id}")
+	private String deleteByIdQuery;
+	
+	@Value("${user.delete-credentials-by-email}")
+	private String deleteCredByEmailQuery;
+	
+	
+	
 	
 	@Autowired
 	public UserRepositoryImpl(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate,
@@ -153,7 +161,11 @@ public class UserRepositoryImpl implements UserRepository {
 
 	@Override
 	public void deleteById(long id) {
-		// TODO Auto-generated method stub
+		User user = findById(id);
+		if(user != null) {
+			jdbcTemplate.update(deleteCredByEmailQuery, new Object[] {user.getEmail()});
+			jdbcTemplate.update(deleteByIdQuery, new Object[] {id});
+		}
 		
 	}
 	
