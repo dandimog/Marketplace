@@ -36,11 +36,13 @@ import lombok.extern.slf4j.Slf4j;
 
 import static org.springframework.http.HttpStatus.OK;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Slf4j
@@ -89,13 +91,14 @@ public class UserController  {
     }
     
     @GetMapping("/confirm-account")
-    public ResponseEntity<Void> activate(@RequestParam(name = "token") String link) {
+    public void activate(@RequestParam(name = "token") String link, HttpServletResponse response) throws IOException {
         UserDto newUser = userService.enableUser(link);
         if(newUser == null) {
-        	return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.LOCATION, redirectConfirmAccountUrl).build();
+        	response.setStatus(HttpStatus.OK.value());
         } else {
-        	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header(HttpHeaders.LOCATION, redirectConfirmAccountUrl).build();
+        	response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }
+        response.sendRedirect(redirectConfirmAccountUrl);
     }
 
     
@@ -106,13 +109,14 @@ public class UserController  {
     }
     
     @PostMapping("/confirm-passreset/{link}")
-    public ResponseEntity<UserDto> confirmPassReset(@PathVariable String link) {
+    public void confirmPassReset(@PathVariable String link, HttpServletResponse response) throws IOException {
     	UserDto user = userService.enableUser(link);
     	if(user == null) {
-    		return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.LOCATION, redirectResetPasswordUrl+"/"+user.getId()).build();
+        	response.setStatus(HttpStatus.OK.value());
         } else {
-    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header(HttpHeaders.LOCATION, redirectResetPasswordUrl+"/"+user.getId()).build();
+        	response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }
+    	response.sendRedirect(redirectResetPasswordUrl+"/"+user.getId());
     }
     
     
