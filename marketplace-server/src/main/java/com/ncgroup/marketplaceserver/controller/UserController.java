@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,9 +44,9 @@ import java.util.Map;
 import javax.validation.Valid;
 
 @Slf4j
-@RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "http://localhost:4200")
+@RestController
 public class UserController  {
     private AuthenticationManager authenticationManager;
     private UserService userService;
@@ -65,7 +66,7 @@ public class UserController  {
         this.jwtProvider = jwtProvider;
     }
 
-    @PostMapping("/login")
+    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDto> login(@Valid @RequestBody LoginUserDto user) {
     	/*try {
     	authenticate(user.getEmail(), user.getPassword());
@@ -91,9 +92,9 @@ public class UserController  {
     public ResponseEntity<Void> activate(@RequestParam(name = "token") String link) {
         UserDto newUser = userService.enableUser(link);
         if(newUser == null) {
-        	return ResponseEntity.status(HttpStatus.OK).location(URI.create(redirectConfirmAccountUrl)).build();
+        	return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.LOCATION, redirectConfirmAccountUrl).build();
         } else {
-        	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).location(URI.create(redirectConfirmAccountUrl)).build();
+        	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header(HttpHeaders.LOCATION, redirectConfirmAccountUrl).build();
         }
     }
 
@@ -108,9 +109,9 @@ public class UserController  {
     public ResponseEntity<UserDto> confirmPassReset(@PathVariable String link) {
     	UserDto user = userService.enableUser(link);
     	if(user == null) {
-        	return ResponseEntity.status(HttpStatus.OK).location(URI.create(redirectResetPasswordUrl+"/"+user.getId())).build();
+    		return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.LOCATION, redirectResetPasswordUrl+"/"+user.getId()).build();
         } else {
-        	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).location(URI.create(redirectResetPasswordUrl+user.getId())).build();
+    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header(HttpHeaders.LOCATION, redirectResetPasswordUrl+"/"+user.getId()).build();
         }
     }
     

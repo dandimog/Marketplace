@@ -13,13 +13,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.ncgroup.marketplaceserver.security.filter.AuthenticationFilter;
 import com.ncgroup.marketplaceserver.security.filter.AuthorizationFilter;
 import com.ncgroup.marketplaceserver.security.filter.JwtAccessDeniedHandler;
 
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter implements WebMvcConfigurer{
 	private AuthorizationFilter authorizationFilter;
     private JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private AuthenticationFilter authenticationFilter;
@@ -68,6 +70,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+    
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:4200")
+                .allowedMethods("*");
     }
 }
 
