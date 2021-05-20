@@ -7,6 +7,10 @@ import {RegisterComponent} from './register/register.component';
 import {LayoutComponent} from './layout/layout.component';
 import {LoginComponent} from './login/login.component';
 import {ForgotPasswordComponent} from './forgot-password/forgot-password.component';
+import {ResetPasswordComponent} from './reset-password/reset-password.component';
+import {RegistrationGreetingComponent} from './registration-greeting/registration-greeting.component';
+import {ConfirmedComponent} from './confirmed/confirmed.component';
+import {LoginFormComponent} from './_components/login.form.component';
 
 @NgModule({
   imports: [
@@ -18,7 +22,11 @@ import {ForgotPasswordComponent} from './forgot-password/forgot-password.compone
     LayoutComponent,
     RegisterComponent,
     LoginComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
+    RegistrationGreetingComponent,
+    ConfirmedComponent,
+    LoginFormComponent
   ]
 })
 export class AccountModule { }

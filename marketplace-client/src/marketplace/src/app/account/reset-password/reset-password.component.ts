@@ -2,42 +2,31 @@ import { Component } from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AccountService} from '../../_services/account.service';
 import {first} from 'rxjs/operators';
-import {ActivatedRoute, Router} from '@angular/router';
-import {validateConfirmPassword, validatePassword} from '../../_helpers/validators.service';
+import {Router} from '@angular/router';
 
 @Component({
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  selector: 'app-root',
+  templateUrl: './reset-password.component.html',
+  // styleUrls: ['./register.component.css']
 })
 
-export class RegisterComponent {
+export class ResetPasswordComponent {
 
   form: FormGroup;
   submitted = false;
 
-  // icons
-  loading = false;
-  showPassword = true;
-
   constructor(
     private formBuilder: FormBuilder,
     private accountService: AccountService,
-    private route: ActivatedRoute,
+    // private route: ActivatedRoute,
     private router: Router,
     // private alertService: AlertService
   ) {
     this.form = this.formBuilder.group({
-      // title: ['', Validators.required],
-      name: ['', Validators.required],
-      surname: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: [''],
-      password: ['', [Validators.required, Validators.minLength(6),
-        Validators.maxLength(32)]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
-      acceptTerms: [false, Validators.requiredTrue]
     }, {
-      validator: [validateConfirmPassword, validatePassword]
+      // validator: MustMatch('password', 'validateConfirmPassword')
     });
   }
 
@@ -45,17 +34,20 @@ export class RegisterComponent {
 
   onSubmit(): void {
     this.submitted = true;
+
+    // stop here if form is invalid
     if (this.form.invalid) {
       return;
     }
-    this.loading = true;
+
+    // this.loading = true;
     this.accountService.register(this.form.value)
       .pipe(first())
       .subscribe({
         next: () => {
           console.log('Registered');
           // this.router.navigate(['../login'], { relativeTo: this.route });
-          this.router.navigate(['../registration-greeting', {relativeTo: this.route}]);
+          this.router.navigate(['../login']);
         },
         error: error => {
           console.log(error);
