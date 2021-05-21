@@ -5,8 +5,8 @@ import {LayoutComponent} from './layout/layout.component';
 import {LoginComponent} from './login/login.component';
 import {ForgotPasswordComponent} from './forgot-password/forgot-password.component';
 import {ResetPasswordComponent} from './reset-password/reset-password.component';
-import {RegistrationGreetingComponent} from './registration-greeting/registration-greeting.component';
 import {ConfirmedComponent} from './confirmed/confirmed.component';
+import {AuthGuardService} from '../_auth/auth.guard.service';
 
 const routes: Routes = [
   {
@@ -14,8 +14,7 @@ const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
       { path: 'forgot-password', component: ForgotPasswordComponent },
-      { path: 'reset-password', component: ResetPasswordComponent },
-      { path: 'registration-greeting', component: RegistrationGreetingComponent},
+      { path: 'reset-password', component: ResetPasswordComponent , canActivate: [AuthGuardService]},
       { path: 'confirmed', component: ConfirmedComponent}
     ],
     path: '', component: LayoutComponent

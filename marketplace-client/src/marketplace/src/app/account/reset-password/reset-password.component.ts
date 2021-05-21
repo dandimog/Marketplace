@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AccountService} from '../../_services/account.service';
 import {first} from 'rxjs/operators';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
+import {validateConfirmPassword, validatePassword} from '../../_helpers/validators.service';
 
 @Component({
   selector: 'app-root',
@@ -13,20 +14,24 @@ import {Router} from '@angular/router';
 export class ResetPasswordComponent {
 
   form: FormGroup;
+
+  // icons
+  loading = false;
   submitted = false;
+  showPassword = false;
+  showConfirmPassword = false;
+  reseted = false;
 
   constructor(
     private formBuilder: FormBuilder,
     private accountService: AccountService,
-    // private route: ActivatedRoute,
-    private router: Router,
-    // private alertService: AlertService
+    private route: ActivatedRoute,
   ) {
     this.form = this.formBuilder.group({
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
     }, {
-      // validator: MustMatch('password', 'validateConfirmPassword')
+       validator: [validateConfirmPassword, validatePassword]
     });
   }
 
@@ -34,27 +39,37 @@ export class ResetPasswordComponent {
 
   onSubmit(): void {
     this.submitted = true;
-
-    // stop here if form is invalid
+    this.loading = true;
+    console.log('here');
     if (this.form.invalid) {
       return;
     }
+    this.route.queryParamMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.accountService.setNewPassword(id, this.form.get('password')?.value)
+          .pipe(first())
+          .subscribe({
+            next: () => {
+              console.log('Password reset');
+              this.loading = false;
+              this.reseted = true;
+            },
+            error: (error: any) => {
+              console.log(error);
+              this.loading = false;
+            }
+          });
+      }
+    });
+  }
 
-    // this.loading = true;
-    this.accountService.register(this.form.value)
-      .pipe(first())
-      .subscribe({
-        next: () => {
-          console.log('Registered');
-          // this.router.navigate(['../login'], { relativeTo: this.route });
-          this.router.navigate(['../login']);
-        },
-        error: error => {
-          console.log(error);
-          // this.alertService.error(error);
-          // this.loading = false;
-        }
-      });
+  showHidePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  showHideConfirmPassword(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
 }

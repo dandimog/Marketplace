@@ -11,8 +11,7 @@
   <div class="form-group">
     <label>Password</label>
     <div class="input-group">
-      <input [type]="showPassword ? 'text' : 'password'"
-             type="password" formControlName="password"
+      <input [type]="showPassword ? 'text' : 'password'" formControlName="password"
              class="form-control" [ngClass]="{ 'is-invalid': submitted && getForm.password.errors }" />
       <div class="input-group-append">
     <span class="input-group-text">
@@ -26,9 +25,10 @@
       ></i>
     </span>
       </div>
-    </div>
-    <div *ngIf="submitted && getForm.password.errors" class="invalid-feedback">
-      <div *ngIf="getForm.password.errors.required">Password is required</div>
+      <div *ngIf="submitted && getForm.password.errors" class="invalid-feedback">
+        <div *ngIf="getForm.password.errors.required">Password is required</div>
+        <div *ngIf="getForm.password.hasError('IncorrectPassword')">Incorrect password</div>
+      </div>
     </div>
   </div>
   <div class="form-row">

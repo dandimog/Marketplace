@@ -3,7 +3,7 @@ import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/form
 import {AccountService} from '../../_services/account.service';
 import {first} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
-import {validateConfirmPassword, validatePassword} from '../../_helpers/validators.service';
+import {validateBirthday, validateConfirmPassword, validatePassword} from '../../_helpers/validators.service';
 
 @Component({
   templateUrl: './register.component.html',
@@ -17,27 +17,26 @@ export class RegisterComponent {
 
   // icons
   loading = false;
-  showPassword = true;
+  showPassword = false;
+  showConfirmPassword = false;
+  registered = false;
 
   constructor(
     private formBuilder: FormBuilder,
     private accountService: AccountService,
-    private route: ActivatedRoute,
-    private router: Router,
-    // private alertService: AlertService
   ) {
     this.form = this.formBuilder.group({
-      // title: ['', Validators.required],
       name: ['', Validators.required],
       surname: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      phone: [''],
+      phone: ['', Validators.pattern(/\+380[0-9]{9}/)],
+      birthday: [''],
       password: ['', [Validators.required, Validators.minLength(6),
         Validators.maxLength(32)]],
       confirmPassword: ['', Validators.required],
       acceptTerms: [false, Validators.requiredTrue]
     }, {
-      validator: [validateConfirmPassword, validatePassword]
+      validator: [validateConfirmPassword, validatePassword, validateBirthday]
     });
   }
 
@@ -53,16 +52,24 @@ export class RegisterComponent {
       .pipe(first())
       .subscribe({
         next: () => {
-          console.log('Registered');
-          // this.router.navigate(['../login'], { relativeTo: this.route });
-          this.router.navigate(['../registration-greeting', {relativeTo: this.route}]);
+          this.loading = false;
+          this.registered = true;
         },
         error: error => {
-          console.log(error);
-          // this.alertService.error(error);
-          // this.loading = false;
+          if (error.error.message === 'Email  already exists'){
+            this.getForm.email.setErrors({EmailAlreadyExists : true});
+          }
+          this.loading = false;
         }
       });
+  }
+
+  showHidePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  showHideConfirmPassword(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
 }

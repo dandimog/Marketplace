@@ -1,4 +1,13 @@
 import {AbstractControl} from '@angular/forms';
+import * as moment from 'moment';
+
+export function validateBirthday(control: AbstractControl): void{
+  const birthday = control.get('birthday');
+  const formYear = birthday?.value.split('-')[0];
+  if (birthday && birthday.value && (formYear > moment().toDate().getFullYear() || formYear < 1920)) {
+    birthday.setErrors({InvalidDate: true});
+  }
+}
 
 export function validateConfirmPassword(control: AbstractControl): void{
   const password = control.get('password')?.value;

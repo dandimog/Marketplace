@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AccountService} from '../../_services/account.service';
-import {first} from 'rxjs/operators';
 
 @Component({
     selector: 'app-login-form',
@@ -15,7 +14,7 @@ export class LoginFormComponent {
 
   // icons
   loading = false;
-  showPassword = true;
+  showPassword = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -38,15 +37,17 @@ export class LoginFormComponent {
     }
     this.loading = true;
     this.accountService.login(this.getForm.email.value, this.getForm.password.value)
-      .pipe(first())
       .subscribe({
         next: () => {
-          const returnUrl = 'home';
-          this.router.navigateByUrl(returnUrl);
-        },
-        error: error => {
-          console.log(error);
+          this.router.navigateByUrl('/home');
+          this.submitted = false;
           this.loading = false;
+        },
+          error: error => {
+          console.log('Error: ' + error);
+          this.loading = false;
+          const passwordField = this.form.get('password');
+          if (passwordField) { passwordField.setErrors({IncorrectPassword: true}); }
         }
       });
   }
