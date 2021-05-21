@@ -1,9 +1,6 @@
 package com.ncgroup.marketplaceserver.repository.impl;
 
-import java.sql.SQLException;
 import java.util.List;
-
-import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +28,6 @@ public class UserRepositoryImpl implements UserRepository {
 
 	private JdbcTemplate jdbcTemplate;
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	private DataSource dataSource;
 	
 	@Value("${user.find-all}")
 	private String findAllQuery;
@@ -79,11 +75,9 @@ public class UserRepositoryImpl implements UserRepository {
 	
 	
 	@Autowired
-	public UserRepositoryImpl(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-			DataSource dataSource) {
+	public UserRepositoryImpl(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-		this.dataSource = dataSource;
 	}
 	
 	/*Returns User if exists or else null*/

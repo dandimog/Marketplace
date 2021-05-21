@@ -17,14 +17,12 @@ import org.springframework.stereotype.Service;
 import com.ncgroup.marketplaceserver.exception.constants.ExceptionMessage;
 import com.ncgroup.marketplaceserver.exception.domain.EmailExistException;
 import com.ncgroup.marketplaceserver.exception.domain.EmailNotFoundException;
-import com.ncgroup.marketplaceserver.exception.domain.LinkExpiredException;
-import com.ncgroup.marketplaceserver.exception.domain.LinkNotValidException;
 import com.ncgroup.marketplaceserver.exception.domain.PasswordNotValidException;
 import com.ncgroup.marketplaceserver.exception.domain.UserNotFoundException;
 import com.ncgroup.marketplaceserver.model.Role;
 import com.ncgroup.marketplaceserver.model.User;
 import com.ncgroup.marketplaceserver.model.dto.UserDto;
-import com.ncgroup.marketplaceserver.repository.*;
+import com.ncgroup.marketplaceserver.repository.UserRepository;
 import com.ncgroup.marketplaceserver.security.model.UserPrincipal;
 import com.ncgroup.marketplaceserver.security.service.LoginAttemptService;
 import com.ncgroup.marketplaceserver.service.EmailSenderService;
@@ -112,7 +110,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		if(user.getPassword().equals(newPassword)) {
 			throw new PasswordNotValidException(ExceptionMessage.SAME_PASSWORD);
 		}
-		userRepository.updatePassword(user.getEmail(), encodePassword(newPassword));;
+		userRepository.updatePassword(user.getEmail(), encodePassword(newPassword));
 	}
 	
 	@Override
@@ -216,12 +214,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	
 	
 	private void validateLoginAttempt(User user) {
-		if(loginAttemptService.hasExceededMaxAttempts(user.getId())) {
+		/*if(loginAttemptService.hasExceededMaxAttempts(user.getId())) {
 
 			//TODO captcha
 		} else {
 			loginAttemptService.successfullLogin(user.getEmail());
-		}
+		}*/
+		loginAttemptService.successfullLogin(user.getEmail());
 	}
 	
 	//Checks wheather link exists and non-expired
@@ -240,10 +239,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return passwordEncoder.encode(password);
 	}
 
-	
-	private boolean validateEmailPattern(String email) {
-		return true;
-	}
 	
 	private boolean validatePasswordPattern(String password) {
 		int count = 0;

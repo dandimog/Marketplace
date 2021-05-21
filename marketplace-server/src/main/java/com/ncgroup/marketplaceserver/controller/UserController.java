@@ -1,5 +1,13 @@
 package com.ncgroup.marketplaceserver.controller;
 
+import static org.springframework.http.HttpStatus.OK;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -8,46 +16,24 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.node.TextNode;
-import com.ncgroup.marketplaceserver.exception.constants.ExceptionMessage;
-import com.ncgroup.marketplaceserver.exception.domain.EmailNotValidException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.ncgroup.marketplaceserver.model.User;
 import com.ncgroup.marketplaceserver.model.dto.LoginUserDto;
+import com.ncgroup.marketplaceserver.model.dto.ResetPasswordDto;
 import com.ncgroup.marketplaceserver.model.dto.UserDto;
 import com.ncgroup.marketplaceserver.security.constants.JwtConstants;
 import com.ncgroup.marketplaceserver.security.model.UserPrincipal;
 import com.ncgroup.marketplaceserver.security.util.JwtProvider;
 import com.ncgroup.marketplaceserver.service.UserService;
 
-import lombok.extern.slf4j.Slf4j;
-
-import static org.springframework.http.HttpStatus.OK;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
-@Slf4j
 @RequestMapping("/api")
-//@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class UserController  {
     private AuthenticationManager authenticationManager;
@@ -93,7 +79,7 @@ public class UserController  {
     @GetMapping("/confirm-account")
     public void activate(@RequestParam(name = "token") String link, HttpServletResponse response) throws IOException {
         UserDto newUser = userService.enableUser(link);
-        if(newUser == null) {
+        if(newUser != null) {
         	response.setStatus(HttpStatus.OK.value());
         } else {
         	response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -103,27 +89,29 @@ public class UserController  {
 
     
     @PostMapping("/reset-password")
-    public ResponseEntity<Void> resetPassword(@RequestBody TextNode email) {
-        userService.resetPassword(email.asText());
+    public ResponseEntity<Void> resetPassword(@RequestBody JsonNode email) {
+        userService.resetPassword(email.get("email").asText());
         return ResponseEntity.noContent().build();
     }
     
-    @PostMapping("/confirm-passreset/{link}")
-    public void confirmPassReset(@PathVariable String link, HttpServletResponse response) throws IOException {
+    @GetMapping("/confirm-passreset")
+    public void confirmPassReset(@RequestParam(name = "token") String link, HttpServletResponse response) throws IOException {
     	UserDto user = userService.enableUser(link);
-    	if(user == null) {
+    	if(user != null) {
         	response.setStatus(HttpStatus.OK.value());
+        	response.sendRedirect(redirectResetPasswordUrl+"?id="+user.getId());
         } else {
         	response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        	response.sendRedirect(redirectResetPasswordUrl);
         }
-    	response.sendRedirect(redirectResetPasswordUrl+"/"+user.getId());
+    	
     }
     
     
-    @PostMapping("/setnewpassword/{id}")
-    public ResponseEntity<UserDto> setNewPassword(@RequestBody String password, @PathVariable long id) {
-        userService.setNewPassword(id, password);
-        User user = userService.findUserById(id);
+    @PostMapping("/setnewpassword")
+    public ResponseEntity<UserDto> setNewPassword(@RequestBody ResetPasswordDto resetPasswordDto) {
+        userService.setNewPassword(resetPasswordDto.getId(), resetPasswordDto.getPassword());
+        User user = userService.findUserById(resetPasswordDto.getId());
         UserPrincipal userPrincipal = new UserPrincipal(user);
         HttpHeaders jwtHeader = getJwtHeader(userPrincipal);
         return new ResponseEntity<>(UserDto.convertToDto(user), jwtHeader, OK);
@@ -163,6 +151,7 @@ public class UserController  {
 
     private HttpHeaders getJwtHeader(UserPrincipal user) {
         HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, JwtConstants.TOKEN_HEADER);
         headers.add(JwtConstants.TOKEN_HEADER, jwtProvider.generateJwtToken(user));
         return headers;
     }

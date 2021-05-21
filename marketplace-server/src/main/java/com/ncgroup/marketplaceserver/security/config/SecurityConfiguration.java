@@ -16,27 +16,25 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.ncgroup.marketplaceserver.security.filter.AuthenticationFilter;
 import com.ncgroup.marketplaceserver.security.filter.AuthorizationFilter;
-import com.ncgroup.marketplaceserver.security.filter.JwtAccessDeniedHandler;
 
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter implements WebMvcConfigurer{
 	private AuthorizationFilter authorizationFilter;
-    private JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private AuthenticationFilter authenticationFilter;
+    //private JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    //private AuthenticationFilter authenticationFilter;
     private UserDetailsService userDetailsService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     public SecurityConfiguration(AuthorizationFilter authorizationFilter,
-                                 JwtAccessDeniedHandler jwtAccessDeniedHandler,
-                                 AuthenticationFilter authenticationFilter,
+                                 //JwtAccessDeniedHandler jwtAccessDeniedHandler,
+                                 //AuthenticationFilter authenticationFilter,
                                  @Qualifier("userDetailsService")UserDetailsService userDetailsService,
                                  BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.authorizationFilter = authorizationFilter;
-        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
-        this.authenticationFilter = authenticationFilter;
+        //this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
+        //this.authenticationFilter = authenticationFilter;
         this.userDetailsService = userDetailsService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
@@ -52,7 +50,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests()
                 .antMatchers("/api/register", "/api/login","/api/confirm-account").permitAll()
-                .antMatchers("/reset-password").permitAll()
+                .antMatchers("/api/reset-password", "/api/confirm-passreset/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 //.exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler)
