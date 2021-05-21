@@ -55,12 +55,8 @@ export class AccountService {
     return this.http.post(`${baseUrl}/setnewpassword`, body);
   }
 
-  /*  resetPassword(token: string, password: string, validateConfirmPassword: string) {
-      return this.http.post(`${baseUrl}/reset-password`, { token, password, validateConfirmPassword });
-    }*/
-
-  private setToken(authResult: any): void {
-    console.log(authResult.headers);
+  setToken(authResult: any): void {
+    console.log(authResult);
     const token = authResult.headers.get('Authorization');
     if (token) { localStorage.setItem('token', token); }
   }
