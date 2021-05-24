@@ -20,6 +20,7 @@ public class CourierRowMapper implements RowMapper<Courier>{
         Courier courier = Courier.builder()
                 .user(User.builder()
                     .name(rs.getString("name"))
+                    .id(rs.getInt("id"))
                     .surname(rs.getString("surname"))
                     .phone(rs.getString("phone"))
                     .email(rs.getString("email"))
