@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Service
-public class ShoppingCartItemServiceImpl implements ShoppingCartItemService{
+public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
 
     private ShoppingCartItemRepository repository;
     private UserService userService;
@@ -70,7 +70,7 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService{
         }
         ShoppingCartItem shoppingCartItem = shoppingCartItemOpt.get();
         if(!shoppingCartItem.belongsTo(user)){
-            throw new AccessDeniedException("Access denied to shopping cart item with id "+id);
+            throw new AccessDeniedException("Access denied to shopping cart item with id " + id);
         }
         return shoppingCartItem;
     }

@@ -30,7 +30,7 @@ public class UserRowMapper implements RowMapper<User>{
 				.authLink(rs.getString("auth_link"))
 				.authLinkDate(rs.getObject("auth_link_date", LocalDateTime.class))
 				.build();
-		log.info(""+user.isEnabled());
+		log.info("" + user.isEnabled());
 		return user;
 	}
 

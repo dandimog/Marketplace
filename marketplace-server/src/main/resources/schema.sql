@@ -64,3 +64,4 @@ CREATE TABLE IF NOT EXISTS shopping_cart_item
     quantity    INTEGER   NOT NULL,
     adding_time TIMESTAMP NOT NULL
 );
+

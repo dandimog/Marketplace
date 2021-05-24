@@ -13,7 +13,7 @@ public interface ShoppingCartItemService {
 
     public ShoppingCartItem create(ShoppingCartItemCreateDto shoppingCartItemDto);
 
-    public ShoppingCartItem update(long id,ShoppingCartItemUpdateDto shoppingCartItemDto) throws AccessDeniedException, NotFoundException;
+    public ShoppingCartItem update(long id, ShoppingCartItemUpdateDto shoppingCartItemDto) throws AccessDeniedException, NotFoundException;
 
     public void delete(long id) throws NotFoundException, AccessDeniedException;
 

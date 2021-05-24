@@ -33,7 +33,7 @@ public class ShoppingCartItemRepositoryImpl implements ShoppingCartItemRepositor
     @Override
     public Optional<ShoppingCartItem> findById(long id) {
         SqlParameterSource shoppingCartItemParams = new MapSqlParameterSource()
-            .addValue("id",id);
+            .addValue("id", id);
         ShoppingCartItem res;
         try {
             res = namedParameterJdbcTemplate.queryForObject(
@@ -54,7 +54,7 @@ public class ShoppingCartItemRepositoryImpl implements ShoppingCartItemRepositor
     @Override
     public Collection<ShoppingCartItem> findAllByUser(User user) {
         SqlParameterSource shoppingCartItemParams = new MapSqlParameterSource()
-            .addValue("userId",user.getId());
+            .addValue("userId", user.getId());
         return namedParameterJdbcTemplate.query(
             selectByUserIdQuery,
             shoppingCartItemParams,
@@ -67,11 +67,12 @@ public class ShoppingCartItemRepositoryImpl implements ShoppingCartItemRepositor
     @Override
     public ShoppingCartItem save(ShoppingCartItem shoppingCartItem) {
         SqlParameterSource shoppingCartItemParams = new MapSqlParameterSource()
-            .addValue("userId",shoppingCartItem.getUserId())
-            .addValue("goodsId",shoppingCartItem.getGoodsId())
-            .addValue("quantity",shoppingCartItem.getQuantity())
-            .addValue("addingTime",shoppingCartItem.getAddingTime())
+            .addValue("userId", shoppingCartItem.getUserId())
+            .addValue("goodsId", shoppingCartItem.getGoodsId())
+            .addValue("quantity", shoppingCartItem.getQuantity())
+            .addValue("addingTime", shoppingCartItem.getAddingTime())
         ;
+
         return namedParameterJdbcTemplate.queryForObject(
             insertQuery,
             shoppingCartItemParams,
@@ -102,7 +103,7 @@ public class ShoppingCartItemRepositoryImpl implements ShoppingCartItemRepositor
     @Override
     public void remove(ShoppingCartItem shoppingCartItem) {
         SqlParameterSource shoppingCartItemParams = new MapSqlParameterSource()
-            .addValue("id",shoppingCartItem.getId());
+            .addValue("id", shoppingCartItem.getId());
         namedParameterJdbcTemplate.update(
                 deleteByIdQuery,
             shoppingCartItemParams
@@ -114,7 +115,7 @@ public class ShoppingCartItemRepositoryImpl implements ShoppingCartItemRepositor
     @Override
     public void removeAllByUser(User user) {
         SqlParameterSource shoppingCartItemParams = new MapSqlParameterSource()
-                .addValue("userId",user.getId());
+                .addValue("userId", user.getId());
         namedParameterJdbcTemplate.update(
                 deleteByUserIdQuery,
                 shoppingCartItemParams

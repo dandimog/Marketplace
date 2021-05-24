@@ -20,6 +20,6 @@ public class ShoppingCartItem {
     private LocalDateTime addingTime;
 
     public boolean belongsTo(User user){
-        return user.getId()==userId;
+        return user.getId() == userId;
     }
 }

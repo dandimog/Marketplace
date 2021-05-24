@@ -31,8 +31,7 @@ public class ShoppingCartController {
 
     @PostMapping("/item")
     public ResponseEntity<ShoppingCartItem> createCartItem(
-        @Valid @RequestBody ShoppingCartItemCreateDto shoppingCartItemCreateDto
-    ){
+        @Valid @RequestBody ShoppingCartItemCreateDto shoppingCartItemCreateDto) {
         return new ResponseEntity<>(service.create(shoppingCartItemCreateDto), HttpStatus.CREATED);
     }
 
@@ -72,6 +71,5 @@ public class ShoppingCartController {
         service.deleteAll();
         return ResponseEntity.noContent().build();
     }
-
 
 }
