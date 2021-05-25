@@ -1,5 +1,6 @@
 package com.ncgroup.marketplaceserver.security.config;
 
+import com.ncgroup.marketplaceserver.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +21,7 @@ import com.ncgroup.marketplaceserver.security.filter.AuthorizationFilter;
 
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter implements WebMvcConfigurer{
-	private AuthorizationFilter authorizationFilter;
+    private AuthorizationFilter authorizationFilter;
     //private JwtAccessDeniedHandler jwtAccessDeniedHandler;
     //private AuthenticationFilter authenticationFilter;
     private UserDetailsService userDetailsService;
@@ -46,30 +47,31 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().cors().and()
+        http
+                .csrf().disable().cors()
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeRequests()
+                .and()
+                .authorizeRequests()
+                .antMatchers("/api/shopping-cart/**").hasRole("USER")
                 .antMatchers("/api/register", "/api/login","/api/confirm-account").permitAll()
                 .antMatchers("/api/reset-password", "/api/confirm-passreset/**", "/api/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                //.exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler)
-                //.authenticationEntryPoint(authenticationFilter)
-                //.and()
                 .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
     }
-    
+
     @Override
-	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/swagger/swagger-ui/**", "/v3/api-docs/**");
-	}
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/swagger/swagger-ui/**", "/v3/api-docs/**");
+    }
 
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-    
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
@@ -77,4 +79,3 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                 .allowedMethods("*");
     }
 }
-
