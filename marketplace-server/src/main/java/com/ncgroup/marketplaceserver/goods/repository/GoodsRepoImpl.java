@@ -13,11 +13,17 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @PropertySource("classpath:database/productQueries.properties")
 @Repository
 public class GoodsRepoImpl implements GoodsRepository {
+//    ArrayList<String> arr = new ArrayList<>() {
+//        {
+//            add()
+//        }
+//    }
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -32,13 +38,13 @@ public class GoodsRepoImpl implements GoodsRepository {
     }
 
 
-    
+
     @Value("${products.show}")
     private String showAllProducts;
 
     @Override
     public Collection<Good> showAll() {
-        return namedParameterJdbcTemplate.query(showAllProducts, this::mapRowToGood);
+        return namedParameterJdbcTemplate.query(showAllProducts, this::mapRow);
     }
 
 
@@ -58,7 +64,7 @@ public class GoodsRepoImpl implements GoodsRepository {
         return namedParameterJdbcTemplate.query(
                 findByNameQuery,
                 goodsParams,
-                this::mapRowToGood
+                this::mapRow
         );
     }
 
@@ -72,7 +78,7 @@ public class GoodsRepoImpl implements GoodsRepository {
         return namedParameterJdbcTemplate.query(
                 filterByGoodCategory,
                 goodsParams,
-                this::mapRowToGood
+                this::mapRow
         );
     }
 
@@ -87,11 +93,11 @@ public class GoodsRepoImpl implements GoodsRepository {
         return namedParameterJdbcTemplate.query(
                 filterByPriceRange,
                 goodsParams,
-                this::mapRowToGood
+                this::mapRow
         );
     }
 
-    private Good mapRowToGood(ResultSet rs, int rowNum) throws SQLException {
+    private Good mapRow(ResultSet rs, int rowNum) throws SQLException {
         return Good.builder()
                 .id(rs.getLong("id"))
                 .firmId(rs.getLong("firm_id"))

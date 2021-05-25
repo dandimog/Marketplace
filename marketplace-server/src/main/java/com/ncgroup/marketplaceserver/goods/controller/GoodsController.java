@@ -15,6 +15,7 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/api/products")
 public class GoodsController {
+
     private GoodsService service;
 
     @Autowired
