@@ -48,18 +48,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .csrf().disable().cors().and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .authorizeRequests()
-                .antMatchers("/api/shopping-cart/**")
-                    .hasRole("USER")
-                .antMatchers("/api/register", "/api/login","/api/confirm-account","/api/reset-password", "/api/confirm-passreset/**")
-                    .permitAll()
+            .csrf().disable().cors()
                 .and()
-                //.exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler)
-                //.authenticationEntryPoint(authenticationFilter)
-                //.and()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                    .authorizeRequests()
+                    .antMatchers("/api/shopping-cart/**").hasRole("USER")
+                    .antMatchers("/api/register", "/api/login","/api/confirm-account").permitAll()
+                    .antMatchers("/api/reset-password", "/api/confirm-passreset/**", "/api/**").permitAll()
+                    .anyRequest().authenticated()
+                .and()
                 .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
     }
     

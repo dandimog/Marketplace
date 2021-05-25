@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS role
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS ux_role_role
-  ON role (role);
+    ON role (role);
 
 CREATE TABLE IF NOT EXISTS credentials
 (
