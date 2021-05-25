@@ -89,8 +89,7 @@ public class ShoppingCartItemRepositoryImpl implements ShoppingCartItemRepositor
                 .addValue("userId",shoppingCartItem.getUserId())
                 .addValue("goodsId",shoppingCartItem.getGoodsId())
                 .addValue("quantity",shoppingCartItem.getQuantity())
-                .addValue("addingTime",shoppingCartItem.getAddingTime())
-                ;
+                .addValue("addingTime",shoppingCartItem.getAddingTime());
         return namedParameterJdbcTemplate.queryForObject(
                 updateByIdQuery,
                 shoppingCartItemParams,

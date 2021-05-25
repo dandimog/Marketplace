@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface GoodsRepository {
     Good create(Good good);
+    Collection<Good> showAll();
     Collection<Good> findByName(String name);
     Collection<Good> filterByGoodCategory(long categoryId);
     Collection<Good> filterByPrice(int downLimit, int upLimit);

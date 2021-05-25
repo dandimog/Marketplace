@@ -31,6 +31,17 @@ public class GoodsRepoImpl implements GoodsRepository {
         return null;
     }
 
+
+    
+    @Value("${products.show}")
+    private String showAllProducts;
+
+    @Override
+    public Collection<Good> showAll() {
+        return namedParameterJdbcTemplate.query(showAllProducts, this::mapRowToGood);
+    }
+
+
     @Override
     public Good edit(Good good) {
         return null;

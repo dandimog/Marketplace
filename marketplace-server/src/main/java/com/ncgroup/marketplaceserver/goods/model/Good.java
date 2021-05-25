@@ -24,6 +24,6 @@ public class Good {
     //private String imageUrl;
     private String description;
     private long categoryId;
-
+    //private String status;
     //public double discountPrice();
 }
