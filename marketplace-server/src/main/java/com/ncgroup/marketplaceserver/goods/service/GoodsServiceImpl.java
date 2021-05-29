@@ -1,14 +1,19 @@
 package com.ncgroup.marketplaceserver.goods.service;
 
 import com.ncgroup.marketplaceserver.goods.model.Good;
+import com.ncgroup.marketplaceserver.goods.model.dto.GoodDto;
 import com.ncgroup.marketplaceserver.goods.repository.GoodsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+
 
 @Service
 public class GoodsServiceImpl implements GoodsService {
+
+    static final Integer PAGE_CAPACITY = 18;
 
     private GoodsRepository repository;
 
@@ -18,32 +23,39 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    public Good create() {
-        return null;
+    public Good create(GoodDto goodDto) {
+        return repository.create(goodDto);
     }
 
     @Override
-    public Good edit() {
+    public Good edit(GoodDto goodDto, long id) {
         return null;
     }
 
+    /**
+     * TODO: do I even need it? I guess no
+     */
     @Override
-    public Good addDiscount() {
+    public Good read(long id) {
         return null;
     }
 
-    @Override
-    public Good editDiscount() {
-        return null;
-    }
 
     @Override
-    public Good deactivate() {
-        return null;
-    }
-
-    @Override
-    public Collection<Good> readAll() {
+    public List<Good> readAll() {
         return repository.showAll();
+    }
+
+    @Override
+    public List<Good> display(Optional<String> filterCategory, Optional<String>  sortBy,
+                              Optional<String>  sortDirection, Optional<Integer>  pageNumber) {
+        return null;
+    }
+
+    public int pageCount(List<Good> listOfGoods) {
+        if (listOfGoods.size() % PAGE_CAPACITY == 0) {
+            return listOfGoods.size() / PAGE_CAPACITY;
+        }
+        return (listOfGoods.size() / PAGE_CAPACITY) + 1;
     }
 }

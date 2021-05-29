@@ -22,5 +22,4 @@ public interface ShoppingCartItemService {
     public ShoppingCartItem read(long id) throws NotFoundException, AccessDeniedException;
 
     public Collection<ShoppingCartItem> readAll();
-
 }

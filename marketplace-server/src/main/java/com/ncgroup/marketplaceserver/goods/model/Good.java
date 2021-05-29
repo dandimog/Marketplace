@@ -14,16 +14,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Good {
     private long id;
-    private long firmId;
+    private String goodName;
+    private String firmName;
     private int quantity;
     private double price;
-    private Unit unit;
+    //private Unit unit;
     private byte discount;
-    private LocalDateTime shippingDate;
+    //private LocalDateTime shippingDate;
     private boolean inStock;
     //private String imageUrl;
     private String description;
-    private long categoryId;
+    private String categoryName;
     //private String status;
     //public double discountPrice();
 }

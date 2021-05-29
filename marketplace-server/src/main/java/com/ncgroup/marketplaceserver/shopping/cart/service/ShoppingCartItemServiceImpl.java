@@ -66,10 +66,10 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
         User user = userService.getCurrentUser();
         Optional<ShoppingCartItem> shoppingCartItemOpt = repository.findById(id);
         if(!shoppingCartItemOpt.isPresent()){
-            throw new NotFoundException("Shopping cart item with id "+id+" not found");
+            throw new NotFoundException("Shopping cart item with id " + id + " not found");
         }
         ShoppingCartItem shoppingCartItem = shoppingCartItemOpt.get();
-        if(!shoppingCartItem.belongsTo(user)){
+        if(!shoppingCartItem.belongsTo(user)) {
             throw new AccessDeniedException("Access denied to shopping cart item with id " + id);
         }
         return shoppingCartItem;
