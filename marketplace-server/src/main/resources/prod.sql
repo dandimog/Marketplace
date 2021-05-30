@@ -12,10 +12,17 @@ WITH firm_ins AS (
 ),
     product_ins AS (
     INSERT INTO product (name, category_id)
-    VALUES (:productName, categoryId)
+    VALUES (:productName, category_ins.categoryId)
     RETURNING id AS productId
-),
+)
 INSERT INTO goods(prod_id, firm_id, quantity,
                   price, discount, in_stock, description)
-VALUES (productId, firmId, :quantity, :price, :discount,
+VALUES (product_ins.productId, firm_ins.firmId, :quantity, :price, :discount,
   :inStock, :description)
+RETURNING id
+
+
+-- UPDATE goods SET quantity = :quantity, price = :price, \
+-- discount = :discount, in_stock = :inStock, description = :description,\
+-- prod_id = :prodId, firm_id = :firmId, category_id\
+-- WHERE id = :id RETURNING *

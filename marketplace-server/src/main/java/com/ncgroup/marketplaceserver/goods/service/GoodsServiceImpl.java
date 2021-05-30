@@ -3,6 +3,7 @@ package com.ncgroup.marketplaceserver.goods.service;
 import com.ncgroup.marketplaceserver.goods.model.Good;
 import com.ncgroup.marketplaceserver.goods.model.dto.GoodDto;
 import com.ncgroup.marketplaceserver.goods.repository.GoodsRepository;
+import com.ncgroup.marketplaceserver.shopping.cart.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,29 +29,35 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    public Good edit(GoodDto goodDto, long id) {
-        return null;
-    }
-
-    /**
-     * TODO: do I even need it? I guess no
-     */
-    @Override
-    public Good read(long id) {
-        return null;
-    }
-
-
-    @Override
-    public List<Good> readAll() {
-        return repository.showAll();
+    public Good edit(GoodDto goodDto, long id) throws NotFoundException {
+        Good good = this.read(id);
+        goodDto.mapTo(good);
+        good.setId(id);
+        return repository.edit(good);
     }
 
     @Override
-    public List<Good> display(Optional<String> filterCategory, Optional<String>  sortBy,
-                              Optional<String>  sortDirection, Optional<Integer>  pageNumber) {
-        return null;
+    public Good read(long id) throws NotFoundException {
+        Optional<Good> goodOptional = repository.findById(id);
+        return goodOptional.orElseThrow(() ->
+                new NotFoundException("Product with " + id +" not found."));
     }
+
+
+    @Override
+    public List<Good> findAll() {
+        return repository.findAll();
+    }
+
+    @Override
+    public List<Good> display(Optional<String> filter, Optional<String> category,
+                          Optional<String> minPrice, Optional<String> maxPrice,
+                          Optional<String> sortBy, Optional<String> sortDirection,
+                          Optional<Integer> page) {
+        return repository.display(filter, category, minPrice, maxPrice, sortBy,
+                sortDirection, page);
+    }
+
 
     public int pageCount(List<Good> listOfGoods) {
         if (listOfGoods.size() % PAGE_CAPACITY == 0) {

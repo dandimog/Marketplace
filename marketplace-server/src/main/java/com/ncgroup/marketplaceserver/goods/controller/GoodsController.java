@@ -4,6 +4,7 @@ package com.ncgroup.marketplaceserver.goods.controller;
 import com.ncgroup.marketplaceserver.goods.model.Good;
 import com.ncgroup.marketplaceserver.goods.model.dto.GoodDto;
 import com.ncgroup.marketplaceserver.goods.service.GoodsService;
+import com.ncgroup.marketplaceserver.shopping.cart.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +27,6 @@ public class GoodsController {
     /**
      * show the list of all products created
      */
-//    @GetMapping("/")
-//    public ResponseEntity<List<Good>> readAll() {
-//        return new ResponseEntity<>(service.readAll(), HttpStatus.OK);
-//    }
 
     /**
      * create a product and return it just in case we need id/creationTime
@@ -42,7 +39,8 @@ public class GoodsController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Good> editProduct(
-            @RequestBody GoodDto goodDto, @PathVariable("id") long id) {
+            @RequestBody GoodDto goodDto, @PathVariable("id") long id)
+            throws NotFoundException {
         return new ResponseEntity<>(service.edit(goodDto, id), HttpStatus.OK);
     }
 
@@ -52,16 +50,24 @@ public class GoodsController {
      */
     @GetMapping("/")
     public ResponseEntity<List<Good>> display(
-            @RequestParam("filterCategory")
-                    Optional<String> filterCategory,
-            @RequestParam("sortBy")
+            @RequestParam("name")
+                    Optional<String> filter,
+            @RequestParam("category")
+                    Optional<String> category,
+            @RequestParam("minPrice")
+                    Optional<String> minPrice,
+            @RequestParam("maxPrice")
+                    Optional<String> maxPrice,
+            @RequestParam("sort")
                     Optional<String> sortBy,
             @RequestParam("sortDirection") // ASC or DESC
                     Optional<String> sortDirection,
-            @RequestParam("pageNumber")
-                    Optional<Integer> pageNumber) {
+            @RequestParam("page")
+                    Optional<Integer> page) {
         return new ResponseEntity<>(
                 service.display
-                        (filterCategory, sortBy, sortDirection, pageNumber), HttpStatus.OK);
+                        (filter, category,
+                                minPrice, maxPrice, sortBy,
+                                sortDirection, page), HttpStatus.OK);
     }
 }

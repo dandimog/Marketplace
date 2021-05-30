@@ -85,7 +85,7 @@ public class ShoppingCartItemRepositoryImpl implements ShoppingCartItemRepositor
     @Override
     public ShoppingCartItem update(ShoppingCartItem shoppingCartItem) {
         SqlParameterSource shoppingCartItemParams = new MapSqlParameterSource()
-                .addValue("id",shoppingCartItem.getId())
+                .addValue("id", shoppingCartItem.getId())
                 .addValue("userId",shoppingCartItem.getUserId())
                 .addValue("goodsId",shoppingCartItem.getGoodsId())
                 .addValue("quantity",shoppingCartItem.getQuantity())
@@ -128,7 +128,7 @@ public class ShoppingCartItemRepositoryImpl implements ShoppingCartItemRepositor
                  .userId(rs.getLong("user_id"))
                  .goodsId(rs.getLong("goods_id"))
                  .quantity(rs.getInt("quantity"))
-                 .addingTime(rs.getObject("adding_time",LocalDateTime.class))
+                 .addingTime(rs.getObject("adding_time", LocalDateTime.class))
                  .build();
     }
 }

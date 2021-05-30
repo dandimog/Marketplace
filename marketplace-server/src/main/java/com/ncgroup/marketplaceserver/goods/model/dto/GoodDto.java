@@ -16,13 +16,25 @@ public class GoodDto {
     private double price;
     //private Unit unit;
     private byte discount;
-    private LocalDateTime shippingDate;
+    //private LocalDateTime shippingDate;
     private boolean inStock;
     //private String imageUrl;
     private String description;
     private String categoryName;
     //private String status;
     //public double discountPrice();
+
+
+    public void mapTo(Good good) {
+        good.setGoodName(goodName);
+        good.setFirmName(firmName);
+        good.setQuantity(quantity);
+        good.setPrice(price);
+        good.setDiscount(discount);
+        good.setInStock(inStock);
+        good.setDescription(description);
+        good.setCategoryName(categoryName);
+    }
 
     public Good convertToGood() {
         return Good.builder()
