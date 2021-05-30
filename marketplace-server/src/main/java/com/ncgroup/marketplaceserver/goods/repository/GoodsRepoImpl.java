@@ -127,7 +127,7 @@ public class GoodsRepoImpl implements GoodsRepository {
                     .addValue("firmName", good.getFirmName());
             KeyHolder firmHolder = new GeneratedKeyHolder();
             namedParameterJdbcTemplate.update(firmInsert, firmParameters, firmHolder);
-            //firmId = firmHolder.getKey().longValue();
+            firmId = firmHolder.getKey().longValue();
         }
 
 
@@ -148,27 +148,27 @@ public class GoodsRepoImpl implements GoodsRepository {
                     .addValue("productName", good.getGoodName())
                     .addValue("categoryId", categoryId);
             namedParameterJdbcTemplate.update(categoryInsert, productParameters, productHolder);
-            //productId = productHolder.getKey().longValue();
+            productId = productHolder.getKey().longValue();
         }
 
-//        parameters
-//                .addValue("prodId", productId)
-//                .addValue("firmId", firmId)
-//                .addValue("categoryId", categoryId)
-//                .addValue("id", good.getId())
-//                .addValue("quantity", good.getQuantity())
-//                .addValue("price", good.getPrice())
-//                .addValue("discount", good.getDiscount())
-//                .addValue("inStock", good.isInStock())
-//                .addValue("description", good.getDescription());
+        parameters
+                .addValue("prodId", productId)
+                .addValue("firmId", firmId)
+                .addValue("categoryId", categoryId)
+                .addValue("id", good.getId())
+                .addValue("quantity", good.getQuantity())
+                .addValue("price", good.getPrice())
+                .addValue("discount", good.getDiscount())
+                .addValue("inStock", good.isInStock())
+                .addValue("description", good.getDescription());
 
-//        /**
-//         * getting a modified java Good object
-//         * (category name, good name, firm name)
-//         */
-//        Good res = namedParameterJdbcTemplate
-//                .queryForObject(updateProduct, parameters, this::mapRow);
-//
+        /**
+         * getting a modified java Good object
+         * (category name, good name, firm name)
+         */
+        namedParameterJdbcTemplate
+                .update(updateProduct, parameters);
+
 //        res.setCategoryName(good.getCategoryName());
 //        res.setFirmName(good.getFirmName());
 //        res.setGoodName(good.getGoodName());
