@@ -162,16 +162,7 @@ public class GoodsRepoImpl implements GoodsRepository {
                 .addValue("inStock", good.isInStock())
                 .addValue("description", good.getDescription());
 
-        /**
-         * getting a modified java Good object
-         * (category name, good name, firm name)
-         */
-        namedParameterJdbcTemplate
-                .update(updateProduct, parameters);
-
-//        res.setCategoryName(good.getCategoryName());
-//        res.setFirmName(good.getFirmName());
-//        res.setGoodName(good.getGoodName());
+        namedParameterJdbcTemplate.update(updateProduct, parameters);
         return good;
     }
 
