@@ -25,6 +25,7 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Override
     public Good create(GoodDto goodDto) {
+
         return repository.create(goodDto);
     }
 
@@ -45,19 +46,19 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
 
-    @Override
-    public List<Good> findAll() {
-        return repository.findAll();
-    }
+//    @Override
+//    public List<Good> findAll() {
+//        return repository.findAll();
+//    }
 
-    @Override
-    public List<Good> display(Optional<String> filter, Optional<String> category,
-                          Optional<String> minPrice, Optional<String> maxPrice,
-                          Optional<String> sortBy, Optional<String> sortDirection,
-                          Optional<Integer> page) {
-        return repository.display(filter, category, minPrice, maxPrice, sortBy,
-                sortDirection, page);
-    }
+//    @Override
+//    public List<Good> display(Optional<String> filter, Optional<String> category,
+//                          Optional<String> minPrice, Optional<String> maxPrice,
+//                          Optional<String> sortBy, Optional<String> sortDirection,
+//                          Optional<Integer> page) {
+//        return repository.display(filter, category, minPrice, maxPrice, sortBy,
+//                sortDirection, page);
+//    }
 
 
     public int pageCount(List<Good> listOfGoods) {

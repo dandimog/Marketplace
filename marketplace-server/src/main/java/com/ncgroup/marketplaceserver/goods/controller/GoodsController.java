@@ -25,10 +25,6 @@ public class GoodsController {
     }
 
     /**
-     * show the list of all products created
-     */
-
-    /**
      * create a product and return it just in case we need id/creationTime
      * on the client side
      */
@@ -45,29 +41,30 @@ public class GoodsController {
     }
 
     /**
-     * displaying products with respect to filter, sorting and page number if they are given,
+     * displaying products with respect to filter,
+     * sorting and page number if they are given,
      * otherwise just show the first page of all products (unsorted)
      */
-    @GetMapping("/")
-    public ResponseEntity<List<Good>> display(
-            @RequestParam("name")
-                    Optional<String> filter,
-            @RequestParam("category")
-                    Optional<String> category,
-            @RequestParam("minPrice")
-                    Optional<String> minPrice,
-            @RequestParam("maxPrice")
-                    Optional<String> maxPrice,
-            @RequestParam("sort")
-                    Optional<String> sortBy,
-            @RequestParam("sortDirection") // ASC or DESC
-                    Optional<String> sortDirection,
-            @RequestParam("page")
-                    Optional<Integer> page) {
-        return new ResponseEntity<>(
-                service.display
-                        (filter, category,
-                                minPrice, maxPrice, sortBy,
-                                sortDirection, page), HttpStatus.OK);
-    }
+//    @GetMapping("/")
+//    public ResponseEntity<List<Good>> display(
+//            @RequestParam("name")
+//                    Optional<String> filter,
+//            @RequestParam("category")
+//                    Optional<String> category,
+//            @RequestParam("minPrice")
+//                    Optional<String> minPrice,
+//            @RequestParam("maxPrice")
+//                    Optional<String> maxPrice,
+//            @RequestParam("sort")
+//                    Optional<String> sortBy,
+//            @RequestParam("sortDirection") // ASC or DESC
+//                    Optional<String> sortDirection,
+//            @RequestParam("page")
+//                    Optional<Integer> page) {
+//        return new ResponseEntity<>(
+//                service.display
+//                        (filter, category,
+//                                minPrice, maxPrice, sortBy,
+//                                sortDirection, page), HttpStatus.OK);
+//    }
 }

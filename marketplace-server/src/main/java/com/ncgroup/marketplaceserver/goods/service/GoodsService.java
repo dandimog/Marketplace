@@ -14,10 +14,9 @@ public interface GoodsService {
 //    Good addDiscount();
 //    Good editDiscount();
 //    Good deactivate();
-    List<Good> findAll();
 
-    List<Good> display(Optional<String> filter, Optional<String> category,
-                   Optional<String> minPrice, Optional<String> maxPrice,
-                   Optional<String> sortBy, Optional<String> sortDirection,
-                   Optional<Integer> page);
+//    List<Good> display(Optional<String> filter, Optional<String> category,
+//                   Optional<String> minPrice, Optional<String> maxPrice,
+//                   Optional<String> sortBy, Optional<String> sortDirection,
+//                   Optional<Integer> page);
 }
