@@ -18,13 +18,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ShoppingCartExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class )
-    protected ResponseEntity<Object> handleAccessDeniedException(Exception ex, WebRequest request){
+    protected ResponseEntity<Object> handleAccessDeniedException(Exception ex, WebRequest request) {
         ApiError apiError = new ApiError(HttpStatus.FORBIDDEN,ex.getMessage(),ex);
         return super.handleExceptionInternal(ex, apiError, new HttpHeaders(), apiError.getStatus(), request);
     }
 
     @ExceptionHandler(NotFoundException.class)
-    protected ResponseEntity<Object> handleNotFoundException(Exception ex, WebRequest request){
+    protected ResponseEntity<Object> handleNotFoundException(Exception ex, WebRequest request) {
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND,ex.getMessage(),ex);
         return super.handleExceptionInternal(ex, apiError, new HttpHeaders(), apiError.getStatus(), request);
     }

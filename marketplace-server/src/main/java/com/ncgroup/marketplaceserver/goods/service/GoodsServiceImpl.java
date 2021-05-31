@@ -25,7 +25,7 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Override
     public Good create(GoodDto goodDto) {
-
+        Good good = goodDto.convertToGood();
         return repository.create(goodDto);
     }
 

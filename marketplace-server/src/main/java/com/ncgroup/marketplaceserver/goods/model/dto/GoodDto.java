@@ -1,11 +1,8 @@
 package com.ncgroup.marketplaceserver.goods.model.dto;
 
 import com.ncgroup.marketplaceserver.goods.model.Good;
-import com.ncgroup.marketplaceserver.goods.model.Unit;
 import lombok.Builder;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -15,7 +12,7 @@ public class GoodDto {
     private int quantity;
     private double price;
     //private Unit unit;
-    private byte discount;
+    private double discount;
     //private LocalDateTime shippingDate;
     private boolean inStock;
     //private String imageUrl;
@@ -29,7 +26,7 @@ public class GoodDto {
         good.setGoodName(goodName);
         good.setFirmName(firmName);
         good.setQuantity(quantity);
-        good.setPrice(price);
+        good.setPrice(price, discount);
         good.setDiscount(discount);
         good.setInStock(inStock);
         good.setDescription(description);

@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -19,7 +17,7 @@ public class Good {
     private int quantity;
     private double price;
     //private Unit unit;
-    private byte discount;
+    private double discount;
     //private LocalDateTime shippingDate;
     private boolean inStock;
     //private String imageUrl;
@@ -27,4 +25,8 @@ public class Good {
     private String categoryName;
     //private String status;
     //public double discountPrice();
+
+    public void setPrice(double price, double discount) {
+        this.price = price - (price * (discount / 100));
+    }
 }
