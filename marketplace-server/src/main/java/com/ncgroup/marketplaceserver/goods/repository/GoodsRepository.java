@@ -12,7 +12,7 @@ public interface GoodsRepository {
     List<Good> findByName(String name);
     List<Good> filterByGoodCategory(long categoryId);
     List<Good> filterByPrice(int downLimit, int upLimit);
-    Good edit(Good good);
+    void edit(Good good);
     Optional<Good> findById(long id);
 
     List<Good> display(Optional<String> filter, Optional<String> category,

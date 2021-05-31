@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface GoodsService {
     Good create(GoodDto goodDto);
     Good edit(GoodDto goodDto, long id) throws NotFoundException;
-    Good read(long id) throws NotFoundException;
+    Good findById(long id) throws NotFoundException;
 //    Good addDiscount();
 //    Good editDiscount();
 //    Good deactivate();

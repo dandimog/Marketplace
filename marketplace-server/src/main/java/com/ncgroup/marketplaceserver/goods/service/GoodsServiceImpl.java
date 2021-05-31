@@ -30,14 +30,15 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Override
     public Good edit(GoodDto goodDto, long id) throws NotFoundException {
-        Good good = this.read(id);
+        Good good = this.findById(id);
         goodDto.mapTo(good);
         good.setId(id);
-        return repository.edit(good);
+        repository.edit(good);
+        return good;
     }
 
     @Override
-    public Good read(long id) throws NotFoundException {
+    public Good findById(long id) throws NotFoundException {
         Optional<Good> goodOptional = repository.findById(id);
         return goodOptional.orElseThrow(() ->
                 new NotFoundException("Product with " + id +" not found."));

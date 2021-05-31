@@ -84,8 +84,6 @@ public class GoodsRepoImpl implements GoodsRepository {
         return namedParameterJdbcTemplate.query(showAllProducts, this::mapRow);
     }
 
-    @Value("${product.update}")
-    private String updateProduct;
 
     @Value("${firm.find-by-name}")
     private String findFirmByName;
@@ -117,8 +115,11 @@ public class GoodsRepoImpl implements GoodsRepository {
                 queryForObject(findProductByName, productParameter, Long.class);
     }
 
+    @Value("${product.update}")
+    private String updateProduct;
+
     @Override
-    public Good edit(Good good) {
+    public void edit(Good good) {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
 
         Long firmId = findFirmByName(good.getFirmName());
@@ -154,7 +155,6 @@ public class GoodsRepoImpl implements GoodsRepository {
         parameters
                 .addValue("prodId", productId)
                 .addValue("firmId", firmId)
-                .addValue("categoryId", categoryId)
                 .addValue("id", good.getId())
                 .addValue("quantity", good.getQuantity())
                 .addValue("price", good.getPrice())
@@ -163,13 +163,12 @@ public class GoodsRepoImpl implements GoodsRepository {
                 .addValue("description", good.getDescription());
 
         namedParameterJdbcTemplate.update(updateProduct, parameters);
-        return good;
+        //return good;
     }
 
 
-    @Value("${product.find-by-id}")
+    @Value("${good.find-by-id}")
     private String findByIdQuery;
-
     @Override
     public Optional<Good> findById(long id) {
         SqlParameterSource productParameter = new MapSqlParameterSource()
@@ -241,7 +240,6 @@ public class GoodsRepoImpl implements GoodsRepository {
                 .id(rs.getLong("id"))
 //                .goodName(rs.getString("goodName"))
 //                .firmName(rs.getString("firmName"))
-//                .categoryName(rs.getString("categoryName"))
                 .quantity(rs.getInt("quantity"))
                 .price(rs.getDouble("price"))
                 .discount(rs.getByte("discount"))
