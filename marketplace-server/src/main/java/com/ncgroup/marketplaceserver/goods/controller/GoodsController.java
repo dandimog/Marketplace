@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+
 @RestController
 @RequestMapping("/api/products")
 public class GoodsController {
@@ -20,6 +22,12 @@ public class GoodsController {
     @Autowired
     public GoodsController(GoodsService service) {
         this.service = service;
+    }
+
+    @GetMapping
+    @PostMapping
+    public ResponseEntity<Collection<Good>> getAllProducts() {
+        return new ResponseEntity<>(service.getAll(), HttpStatus.CREATED);
     }
 
     /**

@@ -1,7 +1,10 @@
 package com.ncgroup.marketplaceserver.goods.repository;
 
+import com.ncgroup.marketplaceserver.goods.exceptions.GoodAlreadyExistsException;
 import com.ncgroup.marketplaceserver.goods.model.Good;
 import com.ncgroup.marketplaceserver.goods.model.GoodDto;
+import com.ncgroup.marketplaceserver.shopping.cart.repository.ShoppingCartItemRepositoryImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -13,10 +16,14 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
 import java.util.Optional;
 
 @PropertySource("classpath:database/productQueries.properties")
 @Repository
+@Slf4j
 public class GoodsRepoImpl implements GoodsRepository {
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -36,26 +43,26 @@ public class GoodsRepoImpl implements GoodsRepository {
     private String goodInsert;
 
 
-    public Long createFirm(GoodDto goodDto) {
+    public Long createFirm(String firmName) {
         SqlParameterSource firmParameters = new MapSqlParameterSource()
-                .addValue("firmName", goodDto.getFirmName());
+                .addValue("firmName", firmName);
         KeyHolder firmHolder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(firmInsert, firmParameters, firmHolder);
         return firmHolder.getKey().longValue();
     }
 
-    public Long createCategory(GoodDto goodDto) {
+    public Long createCategory(String categoryName) {
         SqlParameterSource categoryParameters = new MapSqlParameterSource()
-                .addValue("categoryName", goodDto.getCategoryName());
+                .addValue("categoryName", categoryName);
         KeyHolder categoryHolder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(categoryInsert, categoryParameters, categoryHolder);
         return categoryHolder.getKey().longValue();
     }
 
-    public Long createProduct(GoodDto goodDto, Long categoryId) {
+    public Long createProduct(String goodName, Long categoryId) {
         KeyHolder productHolder = new GeneratedKeyHolder();
         SqlParameterSource productParameters = new MapSqlParameterSource()
-                .addValue("productName", goodDto.getGoodName())
+                .addValue("productName", goodName)
                 .addValue("categoryId", categoryId);
         namedParameterJdbcTemplate.update(productInsert, productParameters, productHolder);
         return productHolder.getKey().longValue();
@@ -74,54 +81,44 @@ public class GoodsRepoImpl implements GoodsRepository {
         namedParameterJdbcTemplate.update(goodInsert, goodParameters, keyHolder);
         return keyHolder.getKey().longValue();
     }
+
     @Override
-    public Good create(GoodDto goodDto) {
+    public Long create(GoodDto goodDto) throws GoodAlreadyExistsException {
 
         // TODO: make changes with status, shipping date and unit fields
 
         Long firmId = findByName
                 (goodDto.getFirmName(), "firmName", findFirmByName);
-
         if (firmId == null) {
-            firmId = createFirm(goodDto);
+            firmId = createFirm(goodDto.getFirmName());
         }
 
         Long categoryId = findByName
                 (goodDto.getCategoryName(), "categoryName", findCategoryByName);
-
         if (categoryId == null) {
-            categoryId = createCategory(goodDto);
+            categoryId = createCategory(goodDto.getCategoryName());
         }
 
         Long productId = findByName
                 (goodDto.getGoodName(), "productName", findProductByName);
-
         if (productId == null) {
-            productId = createProduct(goodDto, categoryId);
+            productId = createProduct(goodDto.getGoodName(), categoryId);
         }
 
         /**
-         * goods are equal if their firm, product and shipping date are equal
+         * goods are equal if their firm,
+         * product and shipping date are equal
          */
+
         Long goodId = findGood(firmId, productId);
         if (goodId == null) {
-            KeyHolder keyHolder = new GeneratedKeyHolder();
-            SqlParameterSource goodParameters = new MapSqlParameterSource()
-                    .addValue("goodQuantity", goodDto.getQuantity())
-                    .addValue("goodPrice", goodDto.getPrice())
-                    .addValue("goodDiscount", goodDto.getDiscount())
-                    .addValue("goodInStock", goodDto.isInStock())
-                    .addValue("goodDescription", goodDto.getDescription())
-                    .addValue("productId", productId)
-                    .addValue("firmId", firmId);
-            namedParameterJdbcTemplate.update(goodInsert, goodParameters, keyHolder);
-            goodId = keyHolder.getKey().longValue();
-
+            goodId = createGood(goodDto, productId, firmId);
+            return goodId;
         }
 
-        Good good = goodDto.convertToGood();
-        good.setId(goodId);
-        return good;
+        throw new GoodAlreadyExistsException
+                ("Such good already exists! If you want to modify an existing good," +
+                        " please go to the List of goods -> Good -> Edit");
     }
 
     // TODO: delete this method
@@ -132,7 +129,6 @@ public class GoodsRepoImpl implements GoodsRepository {
 //    public List<Good> findAll() {
 //        return namedParameterJdbcTemplate.query(showAllProducts, this::mapRow);
 //    }
-
 
     @Value("${firm.find-by-name}")
     private String findFirmByName;
@@ -152,7 +148,19 @@ public class GoodsRepoImpl implements GoodsRepository {
         }
     }
 
+//    public String getById(Long id, String paramName, String sqlQuery) {
+//        SqlParameterSource parameter = new MapSqlParameterSource()
+//                .addValue("id", id);
+//        try {
+//            return namedParameterJdbcTemplate
+//                    .queryForObject(sqlQuery, parameter, Long.class);
+//        } catch (EmptyResultDataAccessException e) {
+//            return null;
+//        }
+//    }
+
     // TODO: add shipping date here
+
     @Value("${good.find-by-firmId-productId}")
     private String findGood;
 
@@ -168,47 +176,39 @@ public class GoodsRepoImpl implements GoodsRepository {
         }
     }
 
-
     @Value("${product.update}")
     private String updateProduct;
 
     @Override
     public void edit(Good good) {
 
-        Long firmId = findByName(good.getFirmName(), "firmName", findFirmByName);
+        Long firmId = findByName
+                (good.getFirmName(), "firmName", findFirmByName);
         if (firmId == null) {
-            SqlParameterSource firmParameters = new MapSqlParameterSource()
-                    .addValue("firmName", good.getFirmName());
-            KeyHolder firmHolder = new GeneratedKeyHolder();
-            namedParameterJdbcTemplate.update(firmInsert, firmParameters, firmHolder);
-            firmId = firmHolder.getKey().longValue();
+            firmId = createFirm(good.getFirmName());
         }
 
-
-        Long categoryId = findByName(good.getCategoryName(), "categoryName", findCategoryByName);
+        Long categoryId = findByName
+                (good.getCategoryName(), "categoryName", findCategoryByName);
         if (categoryId == null) {
-            SqlParameterSource categoryParameters = new MapSqlParameterSource()
-                    .addValue("categoryName", good.getCategoryName());
-            KeyHolder categoryHolder = new GeneratedKeyHolder();
-            namedParameterJdbcTemplate.update(categoryInsert, categoryParameters, categoryHolder);
-            categoryId = categoryHolder.getKey().longValue();
+            categoryId = createCategory(good.getCategoryName());
         }
 
-
-        Long productId = findByName(good.getGoodName(), "productName", findProductByName);
+        Long productId = findByName
+                (good.getGoodName(), "productName", findProductByName);
         if (productId == null) {
-            KeyHolder productHolder = new GeneratedKeyHolder();
-            SqlParameterSource productParameters = new MapSqlParameterSource()
-                    .addValue("productName", good.getGoodName())
-                    .addValue("categoryId", categoryId);
-            namedParameterJdbcTemplate.update(categoryInsert, productParameters, productHolder);
-            productId = productHolder.getKey().longValue();
+            productId = createProduct(good.getGoodName(), categoryId);
         }
 
+        editGood(good, productId, firmId);
+    }
+
+    public void editGood(Good good, Long productId, Long firmId) {
         SqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("id", good.getId()) // for search purpose
+
                 .addValue("prodId", productId)
                 .addValue("firmId", firmId)
-                .addValue("id", good.getId())
                 .addValue("quantity", good.getQuantity())
                 .addValue("price", good.getPrice())
                 .addValue("discount", good.getDiscount())
@@ -216,21 +216,39 @@ public class GoodsRepoImpl implements GoodsRepository {
                 .addValue("description", good.getDescription());
 
         namedParameterJdbcTemplate.update(updateProduct, parameters);
-        //return good;
     }
 
 
     @Value("${good.find-by-id}")
     private String findGoodById;
+
     @Override
     public Optional<Good> findById(long id) {
         SqlParameterSource productParameter = new MapSqlParameterSource()
                 .addValue("goodId", id);
+        Good good;
 
-        return Optional.ofNullable(
-                namedParameterJdbcTemplate.queryForObject(
-                        findGoodById, productParameter, Good.class
-                )
+        // TODO: QUESTION: specification + Optional.ofNullable()
+
+        try {
+            good = namedParameterJdbcTemplate
+                    .queryForObject(findGoodById, productParameter, this::mapRow);
+        }
+        catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(good);
+    }
+
+    @Value("${good.get-all}")
+    private String getAllGoods;
+    @Override
+    public Collection<Good> getAllGoods() {
+
+        return namedParameterJdbcTemplate.query(
+                getAllGoods,
+                this::mapRow
         );
     }
 //    @Override
@@ -284,14 +302,18 @@ public class GoodsRepoImpl implements GoodsRepository {
 //        );
 //    }
 
-//    private Good mapRow(ResultSet rs, int rowNum) throws SQLException {
-//        return Good.builder()
-//                .id(rs.getLong("id"))
-//                .quantity(rs.getInt("quantity"))
-//                .price(rs.getDouble("price"))
-//                .discount(rs.getByte("discount"))
-//                .inStock(rs.getBoolean("in_stock"))
-//                .description(rs.getString("description"))
-//                .build();
-//    }
+    private Good mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+        return Good.builder()
+                .id(rs.getLong("id"))
+                .quantity(rs.getInt("quantity"))
+                .categoryName(rs.getString("category_name"))
+                .goodName(rs.getString("product_name"))
+                .firmName(rs.getString("firm_name"))
+                .price(rs.getDouble("price"))
+                .discount(rs.getByte("discount"))
+                .inStock(rs.getBoolean("in_stock"))
+                .description(rs.getString("description"))
+                .build();
+    }
 }

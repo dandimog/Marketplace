@@ -1,12 +1,14 @@
 package com.ncgroup.marketplaceserver.goods.repository;
 
+import com.ncgroup.marketplaceserver.goods.exceptions.GoodAlreadyExistsException;
 import com.ncgroup.marketplaceserver.goods.model.Good;
 import com.ncgroup.marketplaceserver.goods.model.GoodDto;
 
+import java.util.Collection;
 import java.util.Optional;
 
 public interface GoodsRepository {
-    Good create(GoodDto good);
+    Long create(GoodDto goodDto) throws GoodAlreadyExistsException;
 
 //    List<Good> findByName(String name);
 //    List<Good> filterByGoodCategory(long categoryId);
@@ -14,6 +16,8 @@ public interface GoodsRepository {
 
     void edit(Good good);
     Optional<Good> findById(long id);
+
+    Collection<Good> getAllGoods();
 
 //    List<Good> display(Optional<String> filter, Optional<String> category,
 //                   Optional<String> minPrice, Optional<String> maxPrice,

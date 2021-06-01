@@ -20,11 +20,9 @@ public class Good {
     private double discount;
     //private LocalDateTime shippingDate;
     private boolean inStock;
-    //private String imageUrl;
     private String description;
     private String categoryName;
     //private String status;
-    //public double discountPrice();
 
     public void setPrice(double price, double discount) {
         this.price = price - (price * (discount / 100));

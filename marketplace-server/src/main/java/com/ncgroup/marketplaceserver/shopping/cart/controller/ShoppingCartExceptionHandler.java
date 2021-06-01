@@ -17,7 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class ShoppingCartExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(AccessDeniedException.class )
+    @ExceptionHandler(AccessDeniedException.class)
     protected ResponseEntity<Object> handleAccessDeniedException(Exception ex, WebRequest request) {
         ApiError apiError = new ApiError(HttpStatus.FORBIDDEN,ex.getMessage(),ex);
         return super.handleExceptionInternal(ex, apiError, new HttpHeaders(), apiError.getStatus(), request);

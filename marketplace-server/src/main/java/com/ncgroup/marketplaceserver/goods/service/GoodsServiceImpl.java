@@ -1,5 +1,6 @@
 package com.ncgroup.marketplaceserver.goods.service;
 
+import com.ncgroup.marketplaceserver.goods.exceptions.GoodAlreadyExistsException;
 import com.ncgroup.marketplaceserver.goods.model.Good;
 import com.ncgroup.marketplaceserver.goods.model.GoodDto;
 import com.ncgroup.marketplaceserver.goods.repository.GoodsRepository;
@@ -7,6 +8,7 @@ import com.ncgroup.marketplaceserver.shopping.cart.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +16,7 @@ import java.util.Optional;
 @Service
 public class GoodsServiceImpl implements GoodsService {
 
-    static final Integer PAGE_CAPACITY = 18;
+    static final Integer PAGE_CAPACITY = 10;
 
     private GoodsRepository repository;
 
@@ -23,19 +25,26 @@ public class GoodsServiceImpl implements GoodsService {
         this.repository = repository;
     }
 
-    @Override
-    public Good create(GoodDto goodDto) {
-        Good good = goodDto.convertToGood();
 
-        return repository.create(goodDto);
+    public Collection<Good> getAll() {
+        return repository.getAllGoods();
+    }
+
+    @Override
+    public Good create(GoodDto goodDto) throws GoodAlreadyExistsException {
+        Long goodId = repository.create(goodDto); // get the id of new good if it is new
+        Good good = new Good();
+        goodDto.mapTo(good);
+        good.setId(goodId);
+        return good;
     }
 
     @Override
     public Good edit(GoodDto goodDto, long id) throws NotFoundException {
-        Good good = this.findById(id);
-        goodDto.mapTo(good);
-        good.setId(id);
-        repository.edit(good);
+        Good good = this.findById(id); // pull the good object if exists
+        goodDto.mapTo(good); // make changes to the good object
+        good.setId(id); // set id
+        repository.edit(good); // push the changed good object
         return good;
     }
 
