@@ -1,9 +1,8 @@
 package com.ncgroup.marketplaceserver.goods.repository;
 
 import com.ncgroup.marketplaceserver.goods.model.Good;
-import com.ncgroup.marketplaceserver.goods.model.dto.GoodDto;
+import com.ncgroup.marketplaceserver.goods.model.GoodDto;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface GoodsRepository {

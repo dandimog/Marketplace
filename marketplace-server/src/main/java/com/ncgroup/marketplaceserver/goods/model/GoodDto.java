@@ -1,4 +1,4 @@
-package com.ncgroup.marketplaceserver.goods.model.dto;
+package com.ncgroup.marketplaceserver.goods.model;
 
 import com.ncgroup.marketplaceserver.goods.model.Good;
 import lombok.Builder;

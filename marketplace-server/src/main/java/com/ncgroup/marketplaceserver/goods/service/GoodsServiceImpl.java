@@ -1,7 +1,7 @@
 package com.ncgroup.marketplaceserver.goods.service;
 
 import com.ncgroup.marketplaceserver.goods.model.Good;
-import com.ncgroup.marketplaceserver.goods.model.dto.GoodDto;
+import com.ncgroup.marketplaceserver.goods.model.GoodDto;
 import com.ncgroup.marketplaceserver.goods.repository.GoodsRepository;
 import com.ncgroup.marketplaceserver.shopping.cart.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +26,7 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public Good create(GoodDto goodDto) {
         Good good = goodDto.convertToGood();
+
         return repository.create(goodDto);
     }
 

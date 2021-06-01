@@ -1,17 +1,15 @@
 package com.ncgroup.marketplaceserver.goods.controller;
 
 
+import com.ncgroup.marketplaceserver.goods.exceptions.GoodAlreadyExistsException;
 import com.ncgroup.marketplaceserver.goods.model.Good;
-import com.ncgroup.marketplaceserver.goods.model.dto.GoodDto;
+import com.ncgroup.marketplaceserver.goods.model.GoodDto;
 import com.ncgroup.marketplaceserver.goods.service.GoodsService;
 import com.ncgroup.marketplaceserver.shopping.cart.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/products")
@@ -29,7 +27,8 @@ public class GoodsController {
      * on the client side
      */
     @PostMapping
-    public ResponseEntity<Good> createProduct(@RequestBody GoodDto goodDto) {
+    public ResponseEntity<Good> createProduct(@RequestBody GoodDto goodDto)
+            throws GoodAlreadyExistsException {
         return new ResponseEntity<>(service.create(goodDto), HttpStatus.CREATED);
     }
 

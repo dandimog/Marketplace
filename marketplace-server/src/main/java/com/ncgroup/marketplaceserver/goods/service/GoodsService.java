@@ -1,11 +1,8 @@
 package com.ncgroup.marketplaceserver.goods.service;
 
 import com.ncgroup.marketplaceserver.goods.model.Good;
-import com.ncgroup.marketplaceserver.goods.model.dto.GoodDto;
+import com.ncgroup.marketplaceserver.goods.model.GoodDto;
 import com.ncgroup.marketplaceserver.shopping.cart.exceptions.NotFoundException;
-
-import java.util.List;
-import java.util.Optional;
 
 public interface GoodsService {
     Good create(GoodDto goodDto);
