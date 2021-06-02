@@ -24,7 +24,7 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Override
     public Good create(GoodDto goodDto) throws GoodAlreadyExistsException {
-        Long goodId = repository.create(goodDto); // get the id of new good if it is new
+        Long goodId = repository.createGood(goodDto); // get the id of new good if it is new
         Good good = new Good();
         good.setProperties(goodDto, goodId);
         return good;
@@ -34,7 +34,7 @@ public class GoodsServiceImpl implements GoodsService {
     public Good edit(GoodDto goodDto, long id) throws NotFoundException {
         Good good = this.findById(id); // pull the good object if exists
         good.setProperties(goodDto, id);
-        repository.edit(goodDto, id); // push the changed good object
+        repository.editGood(goodDto, id); // push the changed good object
         return good;
     }
 
