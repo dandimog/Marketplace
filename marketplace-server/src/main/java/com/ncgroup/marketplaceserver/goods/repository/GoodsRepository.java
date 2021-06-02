@@ -5,6 +5,7 @@ import com.ncgroup.marketplaceserver.goods.model.Good;
 import com.ncgroup.marketplaceserver.goods.model.GoodDto;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public interface GoodsRepository {
@@ -19,9 +20,7 @@ public interface GoodsRepository {
 
     Collection<Good> getAllGoods();
 
-//    List<Good> display(Optional<String> filter, Optional<String> category,
-//                   Optional<String> minPrice, Optional<String> maxPrice,
-//                   Optional<String> sortBy, Optional<String> sortDirection,
-//                   Optional<Integer> page);
+    List<Good> display(String query);
 
+    Integer countGoods();
 }

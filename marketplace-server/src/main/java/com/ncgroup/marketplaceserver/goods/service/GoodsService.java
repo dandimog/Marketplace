@@ -6,6 +6,8 @@ import com.ncgroup.marketplaceserver.goods.model.GoodDto;
 import com.ncgroup.marketplaceserver.shopping.cart.exceptions.NotFoundException;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 public interface GoodsService {
     Good create(GoodDto goodDto) throws GoodAlreadyExistsException;
@@ -13,12 +15,10 @@ public interface GoodsService {
     Good findById(long id) throws NotFoundException;
 
     Collection<Good> getAll();
-//    Good addDiscount();
-//    Good editDiscount();
-//    Good deactivate();
 
-//    List<Good> display(Optional<String> filter, Optional<String> category,
-//                   Optional<String> minPrice, Optional<String> maxPrice,
-//                   Optional<String> sortBy, Optional<String> sortDirection,
-//                   Optional<Integer> page);
+    List<Good> display(Optional<String> filter, Optional<String> category,
+                   Optional<String> minPrice, Optional<String> maxPrice,
+                   Optional<String> sortBy, Optional<String> sortDirection,
+                   Optional<Integer> page);
 }
+

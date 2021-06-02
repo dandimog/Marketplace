@@ -15,11 +15,9 @@ public class GoodDto {
     private double discount;
     //private LocalDateTime shippingDate;
     private boolean inStock;
-    //private String imageUrl;
     private String description;
     private String categoryName;
     //private String status;
-    //public double discountPrice();
 
 
     public void mapTo(Good good) {

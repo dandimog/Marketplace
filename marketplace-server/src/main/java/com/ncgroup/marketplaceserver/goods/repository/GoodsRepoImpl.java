@@ -3,12 +3,12 @@ package com.ncgroup.marketplaceserver.goods.repository;
 import com.ncgroup.marketplaceserver.goods.exceptions.GoodAlreadyExistsException;
 import com.ncgroup.marketplaceserver.goods.model.Good;
 import com.ncgroup.marketplaceserver.goods.model.GoodDto;
-import com.ncgroup.marketplaceserver.shopping.cart.repository.ShoppingCartItemRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @PropertySource("classpath:database/productQueries.properties")
@@ -251,13 +252,32 @@ public class GoodsRepoImpl implements GoodsRepository {
                 this::mapRow
         );
     }
-//    @Override
-//    public List<Good> display(Optional<String> filter, Optional<String> category,
-//                              Optional<String> minPrice, Optional<String> maxPrice,
-//                              Optional<String> sortBy, Optional<String> sortDirection,
-//                              Optional<Integer> page) {
-//        return null;
-//    }
+
+    public List<Good> display(String query) {
+        return namedParameterJdbcTemplate.query(
+                query,
+                this::mapRow
+        );
+    }
+
+
+    @Value("${goods.count}")
+    String numOfGoods;
+    @Override
+    public Integer countGoods() {
+        Integer num;
+        SqlParameterSource productParameter = new MapSqlParameterSource();
+        try {
+            num = namedParameterJdbcTemplate
+                    .queryForObject(numOfGoods, productParameter,
+                            (resultSet, i) -> resultSet.getInt("count"));
+        }
+        catch (EmptyResultDataAccessException e) {
+            num = 0;
+        }
+
+        return num;
+    }
 
 
 //    @Value("${product.find-by-name}")
