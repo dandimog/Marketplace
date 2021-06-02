@@ -18,16 +18,4 @@ public class GoodDto {
     private String description;
     private String categoryName;
     //private String status;
-
-
-    public void mapTo(Good good) {
-        good.setGoodName(goodName);
-        good.setFirmName(firmName);
-        good.setQuantity(quantity);
-        good.setPrice(price, discount);
-        good.setDiscount(discount);
-        good.setInStock(inStock);
-        good.setDescription(description);
-        good.setCategoryName(categoryName);
-    }
 }
