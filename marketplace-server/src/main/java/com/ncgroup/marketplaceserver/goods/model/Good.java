@@ -27,4 +27,17 @@ public class Good {
     public void setPrice(double price, double discount) {
         this.price = price - (price * (discount / 100));
     }
+
+    public void setProperties(GoodDto goodDto, Long id) {
+        this.setId(id);
+        this.setGoodName(goodDto.getGoodName());
+        this.setFirmName(goodDto.getFirmName());
+        this.setQuantity(goodDto.getQuantity());
+        this.setPrice(goodDto.getPrice(), goodDto.getDiscount());
+        this.setDiscount(goodDto.getDiscount());
+        this.setInStock(goodDto.isInStock());
+        this.setDescription(goodDto.getDescription());
+        this.setCategoryName(goodDto.getCategoryName());
+    }
+
 }

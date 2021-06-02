@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface GoodsRepository {
     Long create(GoodDto goodDto) throws GoodAlreadyExistsException;
 
-    void edit(Good good);
+    void edit(GoodDto good, Long id);
     Optional<Good> findById(long id);
 
     List<Good> display(String query);

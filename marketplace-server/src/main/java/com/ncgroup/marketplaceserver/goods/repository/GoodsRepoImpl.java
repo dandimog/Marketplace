@@ -52,6 +52,8 @@ public class GoodsRepoImpl implements GoodsRepository {
         KeyHolder firmHolder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(firmInsert, firmParameters, firmHolder);
         return firmHolder.getKey().longValue();
+
+        
     }
 
     public Long createNewCategory(String categoryName) {
@@ -167,40 +169,40 @@ public class GoodsRepoImpl implements GoodsRepository {
     private String updateProduct;
 
     @Override
-    public void edit(Good good) {
+    public void edit(GoodDto goodDto, Long id) {
 
         Long firmId = findByName
-                (good.getFirmName(), "firmName", findFirmByName);
+                (goodDto.getFirmName(), "firmName", findFirmByName);
         if (firmId == null) {
-            firmId = createNewFirm(good.getFirmName());
+            firmId = createNewFirm(goodDto.getFirmName());
         }
 
         Long categoryId = findByName
-                (good.getCategoryName(), "categoryName", findCategoryByName);
+                (goodDto.getCategoryName(), "categoryName", findCategoryByName);
         if (categoryId == null) {
-            categoryId = createNewCategory(good.getCategoryName());
+            categoryId = createNewCategory(goodDto.getCategoryName());
         }
 
         Long productId = findByName
-                (good.getGoodName(), "productName", findProductByName);
+                (goodDto.getGoodName(), "productName", findProductByName);
         if (productId == null) {
-            productId = createNewProduct(good.getGoodName(), categoryId);
+            productId = createNewProduct(goodDto.getGoodName(), categoryId);
         }
 
-        editGood(good, productId, firmId);
+        editGood(goodDto, id, productId, firmId);
     }
 
-    public void editGood(Good good, Long productId, Long firmId) {
+    public void editGood(GoodDto goodDto, Long id, Long productId, Long firmId) {
         SqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("id", good.getId()) // for search purpose
+                .addValue("id", id) // for search purpose
 
                 .addValue("prodId", productId)
                 .addValue("firmId", firmId)
-                .addValue("quantity", good.getQuantity())
-                .addValue("price", good.getPrice())
-                .addValue("discount", good.getDiscount())
-                .addValue("inStock", good.isInStock())
-                .addValue("description", good.getDescription());
+                .addValue("quantity", goodDto.getQuantity())
+                .addValue("price", goodDto.getPrice())
+                .addValue("discount", goodDto.getDiscount())
+                .addValue("inStock", goodDto.isInStock())
+                .addValue("description", goodDto.getDescription());
 
         namedParameterJdbcTemplate.update(updateProduct, parameters);
     }
