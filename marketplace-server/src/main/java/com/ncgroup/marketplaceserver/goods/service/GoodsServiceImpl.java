@@ -34,7 +34,6 @@ public class GoodsServiceImpl implements GoodsService {
     public Good edit(GoodDto goodDto, long id) throws NotFoundException {
         Good good = this.findById(id); // pull the good object if exists
         good.setProperties(goodDto, id);
-
         repository.edit(goodDto, id); // push the changed good object
         return good;
     }
@@ -65,6 +64,10 @@ public class GoodsServiceImpl implements GoodsService {
 
         // Sort can be by: price, product.name, discount.
 
+        /**
+         * 4 ways to filter goods
+         */
+
         if (name.isPresent()) {
             concatenator.add(" product.name LIKE '%" + name.get() + "%'");
             counter++;
@@ -85,12 +88,20 @@ public class GoodsServiceImpl implements GoodsService {
             counter++;
         }
 
+        /**
+         * constructing a query based on the filters we got
+         */
+
         if (counter > 0) {
             flexibleQuery += " WHERE" + concatenator.get(0);
             for (int i = 1; i < counter; i++) {
                 flexibleQuery += " AND" + concatenator.get(i);
             }
         }
+
+        /**
+         * give our query an ordering
+         */
 
         if (sortBy.isPresent()) {
             flexibleQuery += " ORDER BY " + sortBy.get();
@@ -103,6 +114,10 @@ public class GoodsServiceImpl implements GoodsService {
         } else {
             flexibleQuery += " DESC";
         }
+
+        /**
+         * pagination
+         */
 
         if (page.isPresent()) {
             flexibleQuery += " LIMIT " + PAGE_CAPACITY + " OFFSET " + (page.get() - 1) * PAGE_CAPACITY;
