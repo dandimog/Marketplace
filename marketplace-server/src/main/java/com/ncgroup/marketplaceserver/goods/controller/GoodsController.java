@@ -48,7 +48,7 @@ public class GoodsController {
      * sorting and page number if they are given,
      * otherwise just show the first page of all products (unsorted)
      */
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<Good>> display(
             @RequestParam("name")
                     Optional<String> name,
