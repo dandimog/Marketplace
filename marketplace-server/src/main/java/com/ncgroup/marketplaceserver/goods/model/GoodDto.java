@@ -30,19 +30,4 @@ public class GoodDto {
         good.setDescription(description);
         good.setCategoryName(categoryName);
     }
-
-//    public Good convertToGood() {
-//        return Good.builder()
-//                .goodName(this.getGoodName())
-//                .firmName(this.getFirmName())
-//                .quantity(this.getQuantity())
-//                //.price(this.getPrice())
-//                //.unit(this.getUnit())
-//                .discount(this.getDiscount())
-//                //.shippingDate(this.getShippingDate())
-//                .inStock(this.isInStock())
-//                .description(this.getDescription())
-//                .categoryName(this.getCategoryName())
-//                .build();
-//    }
 }

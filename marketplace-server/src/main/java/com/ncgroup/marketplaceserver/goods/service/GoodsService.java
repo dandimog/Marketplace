@@ -14,8 +14,6 @@ public interface GoodsService {
     Good edit(GoodDto goodDto, long id) throws NotFoundException;
     Good findById(long id) throws NotFoundException;
 
-    Collection<Good> getAll();
-
     List<Good> display(Optional<String> filter, Optional<String> category,
                    Optional<String> minPrice, Optional<String> maxPrice,
                    Optional<String> sortBy, Optional<String> sortDirection,

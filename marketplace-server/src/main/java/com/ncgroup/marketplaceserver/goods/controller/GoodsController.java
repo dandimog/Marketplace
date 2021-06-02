@@ -26,11 +26,6 @@ public class GoodsController {
         this.service = service;
     }
 
-//    @GetMapping
-//    public ResponseEntity<Collection<Good>> getAllProducts() {
-//        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
-//    }
-
     /**
      * create a product and return it just in case we need id/creationTime
      * on the client side
@@ -65,7 +60,7 @@ public class GoodsController {
                     Optional<String> maxPrice,
             @RequestParam("sort")
                     Optional<String> sortBy,
-            @RequestParam("sortDirection") // ASC or DESC
+            @RequestParam("direction") // ASC or DESC
                     Optional<String> sortDirection,
             @RequestParam("page")
                     Optional<Integer> page) {

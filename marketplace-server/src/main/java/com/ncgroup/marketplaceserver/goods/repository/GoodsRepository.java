@@ -11,16 +11,8 @@ import java.util.Optional;
 public interface GoodsRepository {
     Long create(GoodDto goodDto) throws GoodAlreadyExistsException;
 
-//    List<Good> findByName(String name);
-//    List<Good> filterByGoodCategory(long categoryId);
-//    List<Good> filterByPrice(int downLimit, int upLimit);
-
     void edit(Good good);
     Optional<Good> findById(long id);
 
-    Collection<Good> getAllGoods();
-
     List<Good> display(String query);
-
-    Integer countGoods();
 }

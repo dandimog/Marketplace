@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.function.Consumer;
-
 
 @Service
 public class GoodsServiceImpl implements GoodsService {
@@ -22,11 +20,6 @@ public class GoodsServiceImpl implements GoodsService {
     @Autowired
     public GoodsServiceImpl(GoodsRepository repository) {
         this.repository = repository;
-    }
-
-
-    public Collection<Good> getAll() {
-        return repository.getAllGoods();
     }
 
     @Override
@@ -54,21 +47,24 @@ public class GoodsServiceImpl implements GoodsService {
                 new NotFoundException("Product with " + id +" not found."));
     }
 
+    @Override
     public List<Good> display(Optional<String> name, Optional<String> category,
                           Optional<String> minPrice, Optional<String> maxPrice,
                           Optional<String> sortBy, Optional<String> sortDirection,
                           Optional<Integer> page) {
-
-        //int numOfPages = countPages(repository.countGoods());
+        
         int counter = 0;
         List<String> concatenator = new ArrayList<>();
-        String query = "SELECT goods.id, product.name AS product_name, " +
-                "firm.name AS firm_name, category.name AS category_name, goods.quantity, " +
-                "goods.price, goods.discount, goods.in_stock, goods.description FROM goods INNER JOIN " +
-                "product ON goods.prod_id = product.id INNER JOIN firm ON goods.firm_id = firm.id " +
+
+        String flexibleQuery = "SELECT goods.id, product.name AS product_name, " +
+                "firm.name AS firm_name, category.name AS category_name," +
+                " goods.quantity, goods.price, goods.discount, goods.in_stock," +
+                " goods.description FROM goods INNER JOIN " +
+                "product ON goods.prod_id = product.id " +
+                "INNER JOIN firm ON goods.firm_id = firm.id " +
                 "INNER JOIN category ON category.id = product.category_id";
 
-        //sort by: price, product.name, discount
+        // Sort can be by: price, product.name, discount.
 
         if (name.isPresent()) {
             concatenator.add(" product.name LIKE '%" + name.get() + "%'");
@@ -91,39 +87,39 @@ public class GoodsServiceImpl implements GoodsService {
         }
 
         if (counter > 0) {
-            query += " WHERE" + concatenator.get(0);
+            flexibleQuery += " WHERE" + concatenator.get(0);
             for (int i = 1; i < counter; i++) {
-                query += " AND" + concatenator.get(i);
+                flexibleQuery += " AND" + concatenator.get(i);
             }
         }
 
         if (sortBy.isPresent()) {
-           query += " ORDER BY " + sortBy.get();
+           flexibleQuery += " ORDER BY " + sortBy.get();
         } else {
-            query += " ORDER BY product.name";
+            flexibleQuery += " ORDER BY product.name";
         }
 
         if (sortDirection.isPresent()) {
-            query += " " + sortDirection.get().toUpperCase();
+            flexibleQuery += " " + sortDirection.get().toUpperCase();
         } else {
-            query += " DESC";
+            flexibleQuery += " DESC";
         }
 
         if (page.isPresent()) {
-            query += " LIMIT " + PAGE_CAPACITY + " OFFSET " + (page.get() - 1) * PAGE_CAPACITY;
+            flexibleQuery += " LIMIT " + PAGE_CAPACITY + " OFFSET " + (page.get() - 1) * PAGE_CAPACITY;
         } else {
-            query += " LIMIT " + PAGE_CAPACITY;
+            flexibleQuery += " LIMIT " + PAGE_CAPACITY;
         }
 
-
-        return repository.display(query);
+        List<Good> res = repository.display(flexibleQuery);
+        int numOfPages = countPages(res.size());
+        return res;
     }
 
-
-//    public int countPages(int numOfGoods) {
-//        if (numOfGoods % PAGE_CAPACITY == 0) {
-//            return numOfGoods / PAGE_CAPACITY;
-//        }
-//        return (numOfGoods / PAGE_CAPACITY) + 1;
-//    }
+    public int countPages(int numOfGoods) {
+        if (numOfGoods % PAGE_CAPACITY == 0) {
+            return numOfGoods / PAGE_CAPACITY;
+        }
+        return (numOfGoods / PAGE_CAPACITY) + 1;
+    }
 }
