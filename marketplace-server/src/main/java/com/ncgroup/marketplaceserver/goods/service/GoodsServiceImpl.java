@@ -59,7 +59,7 @@ public class GoodsServiceImpl implements GoodsService {
                           Optional<String> sortBy, Optional<String> sortDirection,
                           Optional<Integer> page) {
 
-        int numOfPages = countPages(repository.countGoods());
+        //int numOfPages = countPages(repository.countGoods());
         int counter = 0;
         List<String> concatenator = new ArrayList<>();
         String query = "SELECT goods.id, product.name AS product_name, " +
@@ -104,19 +104,26 @@ public class GoodsServiceImpl implements GoodsService {
         }
 
         if (sortDirection.isPresent()) {
-            concatenator.add(" " + sortDirection.get().toUpperCase());
+            query += " " + sortDirection.get().toUpperCase();
         } else {
-            concatenator.add(" DESC");
+            query += " DESC";
         }
+
+        if (page.isPresent()) {
+            query += " LIMIT " + PAGE_CAPACITY + " OFFSET " + (page.get() - 1) * PAGE_CAPACITY;
+        } else {
+            query += " LIMIT " + PAGE_CAPACITY;
+        }
+
 
         return repository.display(query);
     }
 
 
-    public int countPages(int numOfGoods) {
-        if (numOfGoods % PAGE_CAPACITY == 0) {
-            return numOfGoods / PAGE_CAPACITY;
-        }
-        return (numOfGoods / PAGE_CAPACITY) + 1;
-    }
+//    public int countPages(int numOfGoods) {
+//        if (numOfGoods % PAGE_CAPACITY == 0) {
+//            return numOfGoods / PAGE_CAPACITY;
+//        }
+//        return (numOfGoods / PAGE_CAPACITY) + 1;
+//    }
 }
