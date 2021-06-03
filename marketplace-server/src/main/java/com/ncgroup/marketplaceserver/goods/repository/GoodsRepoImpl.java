@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -136,6 +137,9 @@ public class GoodsRepoImpl implements GoodsRepository {
                     .addValue("goodDiscount", goodDto.getDiscount())
                     .addValue("goodInStock", goodDto.isInStock())
                     .addValue("goodDescription", goodDto.getDescription())
+
+                    //.addValue("date", goodDto.getShippingDate())
+
                     .addValue("productId", productId)
                     .addValue("firmId", firmId);
             namedParameterJdbcTemplate.update(goodInsert, goodParameters, keyHolder);
@@ -196,6 +200,10 @@ public class GoodsRepoImpl implements GoodsRepository {
     private Good mapRow(ResultSet rs, int rowNum) throws SQLException {
         return Good.builder()
                 .id(rs.getLong("id"))
+
+                //.shippingDate(rs.getObject("shipping_date", LocalDate.class))
+
+
                 .quantity(rs.getInt("quantity"))
                 .categoryName(rs.getString("category_name"))
                 .goodName(rs.getString("product_name"))

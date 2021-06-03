@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS goods
     CONSTRAINT fk_unit
     REFERENCES unit(id),
     discount DECIMAL(12,2),
-    shipping_date TIMESTAMP,
+    shipping_date DATE,
     in_stock BOOLEAN,
     status varchar(50),
     image varchar(100),

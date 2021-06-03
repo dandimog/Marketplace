@@ -3,6 +3,8 @@ package com.ncgroup.marketplaceserver.goods.model;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 public class GoodDto {
@@ -12,7 +14,15 @@ public class GoodDto {
     private double price;
     //private Unit unit;
     private double discount;
-    //private LocalDateTime shippingDate;
+
+    /**
+     * 03.04.2021
+     * 03-04-2021
+     * 03/04/2021
+     */
+
+    //private LocalDate shippingDate;
+
     private boolean inStock;
     private String description;
     private String categoryName;
