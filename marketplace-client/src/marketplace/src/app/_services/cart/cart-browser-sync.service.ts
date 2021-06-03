@@ -13,11 +13,11 @@ import {CartLocalService} from "./cart-local.service";
 export class CartBrowserSyncService implements CartService, OnDestroy{
 
   constructor(@Inject(CartLocalService)private cartService: CartService) {
+    this.cartService.setCartItems(this.loadCartItems())
     window.addEventListener('storage',this.storageUpdateListener.bind(this));
   }
 
   private storageUpdateListener(): void{
-    console.log("updating");
     this.cartService.setCartItems(this.loadCartItems());
   }
 
@@ -36,10 +36,6 @@ export class CartBrowserSyncService implements CartService, OnDestroy{
   }
 
   getCartItems(): CartItem[] {
-    let cartItems: CartItem[] = this.loadCartItems();
-    if(cartItems.length>0){
-      this.cartService.setCartItems(cartItems);
-    }
     return this.cartService.getCartItems();
   }
 
