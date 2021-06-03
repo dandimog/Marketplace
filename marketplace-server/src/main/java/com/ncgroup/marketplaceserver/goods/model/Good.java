@@ -1,6 +1,5 @@
 package com.ncgroup.marketplaceserver.goods.model;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
