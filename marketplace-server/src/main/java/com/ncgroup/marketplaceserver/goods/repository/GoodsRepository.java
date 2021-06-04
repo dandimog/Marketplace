@@ -15,4 +15,6 @@ public interface GoodsRepository {
     Optional<Good> findById(long id);
 
     List<Good> display(String query);
+
+    List<String> getCategories();
 }

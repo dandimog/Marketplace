@@ -26,7 +26,9 @@ public class Good {
     private String firmName;
     private int quantity;
     private double price;
-    //private Unit unit;
+
+    private Unit unit;
+
     private double discount;
 
     //private LocalDate shippingDate;
@@ -50,6 +52,7 @@ public class Good {
         this.setId(id);
 
        //this.setShippingDate(goodDto.getShippingDate());
+        this.setUnit(goodDto.getUnit());
 
         this.setGoodName(goodDto.getGoodName());
         this.setFirmName(goodDto.getFirmName());

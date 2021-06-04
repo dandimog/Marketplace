@@ -6,6 +6,7 @@ import com.ncgroup.marketplaceserver.goods.model.GoodDto;
 import com.ncgroup.marketplaceserver.goods.repository.GoodsRepository;
 import com.ncgroup.marketplaceserver.shopping.cart.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -46,16 +47,16 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    public List<Good> display(Optional<String> name, Optional<String> category,
-                              Optional<String> minPrice, Optional<String> maxPrice,
-                              Optional<String> sortBy, Optional<String> sortDirection,
-                              Optional<Integer> page) {
+    public Map<String, Object> display(Optional<String> name, Optional<String> category,
+                                       Optional<String> minPrice, Optional<String> maxPrice,
+                                       Optional<String> sortBy, Optional<String> sortDirection,
+                                       Optional<Integer> page) throws NotFoundException {
 
         int counter = 0;
         List<String> concatenator = new ArrayList<>();
 
         String flexibleQuery = "SELECT goods.id, product.name AS product_name, " +
-                "firm.name AS firm_name, category.name AS category_name," +
+                "firm.name AS firm_name, category.name AS category_name, unit, " +
                 " goods.quantity, goods.price, goods.discount, goods.in_stock," +
                 " goods.description FROM goods INNER JOIN " +
                 "product ON goods.prod_id = product.id " +
@@ -69,7 +70,7 @@ public class GoodsServiceImpl implements GoodsService {
          */
 
         if (name.isPresent()) {
-            concatenator.add(" product.name LIKE '%" + name.get() + "%'");
+            concatenator.add(" product.name LIKE '%" + name.get().toLowerCase() + "%'");
             counter++;
         }
 
@@ -115,25 +116,48 @@ public class GoodsServiceImpl implements GoodsService {
             flexibleQuery += " DESC";
         }
 
+
+        List<Good> res = repository.display(flexibleQuery);
+        if (res.isEmpty()) {
+            throw new NotFoundException
+                    ("Sorry, but there are no products corresponding to your criteria.");
+        }
+
         /**
          * pagination
          */
 
+        int numOfPages = res.size() % PAGE_CAPACITY == 0 ?
+                res.size() / PAGE_CAPACITY : (res.size() / PAGE_CAPACITY) + 1;
+
         if (page.isPresent()) {
-            flexibleQuery += " LIMIT " + PAGE_CAPACITY + " OFFSET " + (page.get() - 1) * PAGE_CAPACITY;
+            res = res.subList(
+                    (page.get() - 1) * PAGE_CAPACITY,
+                    Math.min(res.size(), (page.get() - 1) * PAGE_CAPACITY + PAGE_CAPACITY));
         } else {
-            flexibleQuery += " LIMIT " + PAGE_CAPACITY;
+            page = Optional.of(1);
+            res = res.subList(0, Math.min(res.size(), PAGE_CAPACITY));
         }
 
-        List<Good> res = repository.display(flexibleQuery);
-        int numOfPages = countPages(res.size());
-        return res;
+        for (Good good : res) {
+            good.setPrice(good.getPrice(), good.getDiscount());
+        }
+//        if (page.isPresent()) {
+//            flexibleQuery += " LIMIT " + PAGE_CAPACITY + " OFFSET " + (page.get() - 1) * PAGE_CAPACITY;
+//        } else {
+//            flexibleQuery += " LIMIT " + PAGE_CAPACITY;
+//            page = Optional.of(1);
+//        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("current", page.get());
+        response.put("total", numOfPages);
+        response.put("result_set", res);
+
+        return response;
     }
 
-    public int countPages(int numOfGoods) {
-        if (numOfGoods % PAGE_CAPACITY == 0) {
-            return numOfGoods / PAGE_CAPACITY;
-        }
-        return (numOfGoods / PAGE_CAPACITY) + 1;
+    @Override
+    public List<String> getCategories() throws NotFoundException{
+        return repository.getCategories();
     }
 }

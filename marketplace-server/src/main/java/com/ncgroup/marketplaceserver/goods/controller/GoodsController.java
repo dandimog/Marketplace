@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -29,14 +31,14 @@ public class GoodsController {
      * on the client side
      */
     @PostMapping
-    public ResponseEntity<Good> createProduct(@RequestBody GoodDto goodDto)
+    public ResponseEntity<Good> createProduct(@Valid @RequestBody GoodDto goodDto)
             throws GoodAlreadyExistsException {
         return new ResponseEntity<>(service.create(goodDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Good> editProduct(
-            @RequestBody GoodDto goodDto, @PathVariable("id") long id)
+            @Valid @RequestBody GoodDto goodDto, @PathVariable("id") long id)
             throws NotFoundException {
         return new ResponseEntity<>(service.edit(goodDto, id), HttpStatus.OK);
     }
@@ -47,7 +49,7 @@ public class GoodsController {
      * otherwise just show the first page of all products (unsorted)
      */
     @GetMapping
-    public ResponseEntity<List<Good>> display(
+    public ResponseEntity<Map<String, Object>> display(
             @RequestParam("name")
                     Optional<String> name,
             @RequestParam("category")
@@ -61,10 +63,15 @@ public class GoodsController {
             @RequestParam("direction") // ASC or DESC
                     Optional<String> sortDirection,
             @RequestParam("page")
-                    Optional<Integer> page) {
+                    Optional<Integer> page) throws NotFoundException {
         return new ResponseEntity<>(
-                service.display
-                        (name, category, minPrice, maxPrice, sortBy,
+                service.display(name, category, minPrice, maxPrice, sortBy,
                                 sortDirection, page), HttpStatus.OK);
     }
+
+    @GetMapping("/categories")
+    public ResponseEntity<List<String>> getCategories() throws NotFoundException {
+        return new ResponseEntity<>(service.getCategories(), HttpStatus.OK);
+    }
 }
+

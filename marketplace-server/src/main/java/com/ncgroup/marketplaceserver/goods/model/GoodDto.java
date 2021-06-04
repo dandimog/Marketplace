@@ -12,7 +12,7 @@ public class GoodDto {
     private String firmName;
     private int quantity;
     private double price;
-    //private Unit unit;
+    private Unit unit;
     private double discount;
 
     /**
@@ -21,7 +21,7 @@ public class GoodDto {
      * 03/04/2021
      */
 
-    //private LocalDate shippingDate;
+//    private String shippingDate;
 
     private boolean inStock;
     private String description;
