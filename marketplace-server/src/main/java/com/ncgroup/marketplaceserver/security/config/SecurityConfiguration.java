@@ -1,8 +1,13 @@
 package com.ncgroup.marketplaceserver.security.config;
 
 import com.ncgroup.marketplaceserver.model.Role;
+
+import javax.servlet.Filter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.RegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +24,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.ncgroup.marketplaceserver.security.filter.AuthorizationFilter;
+import com.ncgroup.marketplaceserver.security.util.JwtKeyProvider;
 
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter implements WebMvcConfigurer{
@@ -40,7 +46,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
         this.userDetailsService = userDetailsService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
-
+    
+    
+    /*@Bean
+    public AuthorizationFilter authenticationTokenFilter() throws Exception {
+        return new AuthorizationFilter();
+    }*/
+    
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
@@ -55,9 +67,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
             .authorizeRequests()
                 .antMatchers("/api/shopping-cart/**")
                     .hasRole("USER")
-                .antMatchers("/api/register", "/api/login","/api/confirm-account","/api/reset-password", "/api/confirm-passreset/**",
+                /*.antMatchers("/api/register", "/api/login","/api/confirm-account","/api/reset-password", "/api/confirm-passreset/**",
                         "/api/confirm-passcreate/**", "/api/setnewpassword/**")
-                    .permitAll()
+                    .permitAll()*/
                 .antMatchers(HttpMethod.PATCH, "/api/courier/**", "api/manager/**")
                     .hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/api/manager")
@@ -74,8 +86,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
     
     @Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/swagger/swagger-ui/**", "/v3/api-docs/**");
+		web.ignoring().antMatchers("/swagger/swagger-ui/**", "/v3/api-docs/**")
+		.antMatchers("/api/register", "/api/login","/api/confirm-account","/api/reset-password", "/api/confirm-passreset/**",
+                "/api/confirm-passcreate/**", "/api/setnewpassword/**");
 	}
+    
+    @Bean
+    public RegistrationBean jwtAuthFilterRegister(AuthorizationFilter filter) {
+        FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean<>(filter);
+        registrationBean.setEnabled(false);
+        return registrationBean;
+    }
 
     @Bean
     @Override
