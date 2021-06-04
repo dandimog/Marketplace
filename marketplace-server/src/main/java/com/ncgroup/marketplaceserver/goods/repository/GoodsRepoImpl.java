@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.webjars.NotFoundException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -206,9 +207,12 @@ public class GoodsRepoImpl implements GoodsRepository {
     @Value("${categories.get}")
     String getCategories;
     @Override
-    public List<String> getCategories() {
-        return namedParameterJdbcTemplate.query(getCategories,
+    public List<String> getCategories() throws NotFoundException{
+        List<String> res = namedParameterJdbcTemplate.query(getCategories,
                 (resultSet, i) -> resultSet.getString("name"));
+        if (res.isEmpty())
+            throw new NotFoundException("Sorry, but there are no categories yet.");
+        return res;
     }
 
     private Good mapRow(ResultSet rs, int rowNum) throws SQLException {

@@ -54,14 +54,14 @@ public class Good {
        //this.setShippingDate(goodDto.getShippingDate());
         this.setUnit(goodDto.getUnit());
 
-        this.setGoodName(goodDto.getGoodName());
-        this.setFirmName(goodDto.getFirmName());
+        this.setGoodName(goodDto.getGoodName().toLowerCase());
+        this.setFirmName(goodDto.getFirmName().toLowerCase());
         this.setQuantity(goodDto.getQuantity());
         this.setPrice(goodDto.getPrice(), goodDto.getDiscount());
         this.setDiscount(goodDto.getDiscount());
         this.setInStock(goodDto.isInStock());
         this.setDescription(goodDto.getDescription());
-        this.setCategoryName(goodDto.getCategoryName());
+        this.setCategoryName(goodDto.getCategoryName().toLowerCase());
     }
 
 }
