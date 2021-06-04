@@ -1,25 +1,35 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import {HomeComponent} from './home/home.component';
-import {AuthGuard} from './_helpers/auth.guard';
+import { HomeComponent } from './home/home.component';
+import { RoleGuardService } from './_auth/auth.guard.role.service';
+import { AuthGuardService } from './_auth/auth.guard.service';
+import { Role } from './_models/role';
 
-const accountModule = () => import('./account/account.module').then(x => x.AccountModule);
-// const adminModule = () => import('./admin/admin.module').then(x => x.AdminModule);
-// const profileModule = () => import('./profile/profile.module').then(x => x.ProfileModule);
+const accountModule = () =>
+  import('./account/account.module').then((x) => x.AccountModule);
+const systemAccountModule = () =>
+  import('./system-accounts/system-accounts.module').then(
+    (x) => x.SystemAccountsModule
+  );
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuardService] },
   { path: '', loadChildren: accountModule },
-  // { path: 'profile', loadChildren: profileModule, canActivate: [AuthGuard] },
-  // { path: 'admin', loadChildren: adminModule, canActivate: [AuthGuard], data: { roles: [Role.Admin] } },
+  {
+    path: 'sysaccounts',
+    loadChildren: systemAccountModule,
+    canActivate: [RoleGuardService],
+    data: { roles: [Role.Admin] },
+  },
+  // { path: 'admin', loadChildren: acanActivate: [AuthGuardService], data: { roles: [Role.Admin] } },
 
   // otherwise redirect to home
-  { path: '**', redirectTo: '/login' }
+  { path: '**', pathMatch: 'full', redirectTo: 'login' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
