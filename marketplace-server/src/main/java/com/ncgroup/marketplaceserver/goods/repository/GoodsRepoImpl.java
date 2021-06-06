@@ -99,6 +99,7 @@ public class GoodsRepoImpl implements GoodsRepository {
         return productId.get();
     }
 
+
     // TODO: add shipping date here
     @Value("${good.find-by-firmId-productId}")
     private String findGood;
