@@ -1,11 +1,6 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {CartLocalService} from "../_services/cart/cart-local.service";
-import {Observable} from "rxjs";
-import {CartModelServer} from "../_models/cart.model";
+import {Component, OnInit} from '@angular/core';
 import {CartService} from "../_services/cart/cart.service";
 import {CartItem} from "../_models/cart-item.model";
-import {Product} from "../_models/product.model";
-import {CartBrowserSyncService} from "../_services/cart/cart-browser-sync.service";
 
 @Component({
   selector: 'mg-cart',
@@ -13,11 +8,11 @@ import {CartBrowserSyncService} from "../_services/cart/cart-browser-sync.servic
   styleUrls: ['./cart.component.scss'],
 })
 export class CartComponent implements OnInit {
-  cart: CartItem[] = [];
-  constructor(@Inject(CartBrowserSyncService) public cartService: CartService){}
+  items: CartItem[] = [];
+  constructor(private cartService: CartService){}
 
   ngOnInit() {
-    let cartItems: CartItem[] = this.cartService.getCartItems();
+    let cartItems: CartItem[] = this.cartService.getCart().getItems();
     if(cartItems.length == 0){
       cartItems = [
         {
@@ -61,8 +56,8 @@ export class CartComponent implements OnInit {
           addingTime: Math.floor(Date.now() / 1000)}
       ]
     }
-    this.cartService.setCartItems(cartItems);
-    this.cart = this.cartService.getCartItems();
+    this.cartService.getCart().setItems(cartItems);
+    this.items = this.cartService.getCart().getItems();
   }
 
   increaseQuantityByOne(cartItem: CartItem): void {

@@ -27,7 +27,7 @@ public class ShoppingCartController {
         this.service = service;
     }
 
-    @PutMapping ("/item")
+    @PutMapping ("/")
     public ResponseEntity<ShoppingCartItem> putCartItem(
         @Valid @RequestBody ShoppingCartItemCreateDto shoppingCartItemCreateDto
     ){

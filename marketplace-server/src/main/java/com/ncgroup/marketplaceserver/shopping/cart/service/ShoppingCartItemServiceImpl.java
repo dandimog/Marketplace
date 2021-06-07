@@ -34,18 +34,17 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService{
         );
         if(shoppingCartItemOpt.isPresent()){
             ShoppingCartItem shoppingCartItem = shoppingCartItemOpt.get();
-            shoppingCartItem.setQuantity(shoppingCartItem.getQuantity()+shoppingCartItemDto.getQuantity());
+            shoppingCartItem.setQuantity(shoppingCartItemDto.getQuantity());
             return repository.update(shoppingCartItem);
-        }else{
-            ShoppingCartItem shoppingCartItem = ShoppingCartItem
-                    .builder()
-                    .userId(user.getId())
-                    .goodsId(shoppingCartItemDto.getGoodsId())
-                    .quantity(shoppingCartItemDto.getQuantity())
-                    .addingTime(shoppingCartItemDto.getAddingTime())
-                    .build();
-            return repository.save(shoppingCartItem);
         }
+        ShoppingCartItem shoppingCartItem = ShoppingCartItem
+                .builder()
+                .userId(user.getId())
+                .goodsId(shoppingCartItemDto.getGoodsId())
+                .quantity(shoppingCartItemDto.getQuantity())
+                .addingTime(shoppingCartItemDto.getAddingTime())
+                .build();
+        return repository.save(shoppingCartItem);
     }
 
     @Override
