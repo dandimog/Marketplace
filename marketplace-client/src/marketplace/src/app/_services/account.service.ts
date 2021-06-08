@@ -29,7 +29,6 @@ export class AccountService {
   }
 
   login(email: string, password: string): Observable<HttpResponse<User>> {
-    console.log('Email' + email + ' Password' + password);
     return this.http.post<User>(`${baseUrl}/login`, {email, password},
       {observe: 'response'}).pipe(
         tap(res => this.setToken(res)),
@@ -58,15 +57,14 @@ export class AccountService {
     return this.http.post(`${baseUrl}/reset-password`, email);
   }
 
-  setNewPassword(id: string, password: string): Observable<any> {
-    const body = new ResetPasswordDTO(id, password);
-    console.log(body);
+  setNewPassword(link: string, password: string): Observable<any> {
+    const body = new ResetPasswordDTO(link, password);
     return this.http.post(`${baseUrl}/setnewpassword`, body);
   }
 
   setToken(authResult: any): void {
-    console.log(authResult);
     const token = authResult.headers.get('Authorization');
     if (token) { localStorage.setItem('token', token); }
   }
+
 }

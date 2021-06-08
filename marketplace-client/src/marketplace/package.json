@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration=production",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -22,8 +22,11 @@
     "@angular/platform-browser-dynamic": "~11.2.12",
     "@angular/router": "~11.2.12",
     "@auth0/angular-jwt": "latest",
+    "@ng-bootstrap/ng-bootstrap": "9.1.2",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.1",
+    "ngx-spinner": "^11.0.1",
+    "ngx-toastr": "^14.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.3"

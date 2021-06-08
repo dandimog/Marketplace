@@ -5,6 +5,7 @@ import static org.springframework.http.HttpStatus.OK;
 import java.io.IOException;
 import java.util.List;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -45,6 +46,9 @@ public class UserController  {
     
     @Value("${url.reset-password.redirect}")
     private String redirectResetPasswordUrl;
+
+    @Value("${url.create-password.redirect}")
+    private String redirectCreatePasswordUrl;
     
 
     @Autowired
@@ -70,7 +74,7 @@ public class UserController  {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDto> register(@Valid @RequestBody UserDto user) {
+    public ResponseEntity<UserDto> register(@Valid @RequestBody UserDto user) throws MessagingException {
         UserDto newUser = userService.register(
         		user.getName(), user.getSurname(), user.getEmail(), user.getPassword(), user.getPhone());
         return new ResponseEntity<>(newUser, OK);
@@ -90,28 +94,30 @@ public class UserController  {
     
     @PostMapping("/reset-password")
     public ResponseEntity<Void> resetPassword(@RequestBody JsonNode email) {
-        userService.resetPassword(email.get("email").asText());
+        try {
+            userService.resetPassword(email.get("email").asText());
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
         return ResponseEntity.noContent().build();
     }
     
-    @GetMapping("/confirm-passreset")
+/*    @GetMapping("/confirm-passreset")
     public void confirmPassReset(@RequestParam(name = "token") String link, HttpServletResponse response) throws IOException {
-    	UserDto user = userService.enableUser(link);
+    	User user = userService.getUserByLink(link);
     	if(user != null) {
         	response.setStatus(HttpStatus.OK.value());
-        	response.sendRedirect(redirectResetPasswordUrl+"?id="+user.getId());
+        	response.sendRedirect(redirectResetPasswordUrl+"?id="+link);
         } else {
         	response.setStatus(HttpStatus.UNAUTHORIZED.value());
         	response.sendRedirect(redirectResetPasswordUrl);
         }
-    	
-    }
+    }*/
     
     
     @PostMapping("/setnewpassword")
     public ResponseEntity<UserDto> setNewPassword(@RequestBody ResetPasswordDto resetPasswordDto) {
-        userService.setNewPassword(resetPasswordDto.getId(), resetPasswordDto.getPassword());
-        User user = userService.findUserById(resetPasswordDto.getId());
+        User user = userService.setNewPassword(resetPasswordDto.getLink(), resetPasswordDto.getPassword());
         UserPrincipal userPrincipal = new UserPrincipal(user);
         HttpHeaders jwtHeader = getJwtHeader(userPrincipal);
         return new ResponseEntity<>(UserDto.convertToDto(user), jwtHeader, OK);
