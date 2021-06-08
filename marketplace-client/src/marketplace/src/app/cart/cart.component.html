@@ -2,7 +2,7 @@
 <div class="container">
   <div *ngIf="items.length === 0;" class="text-center my-5">
     <h4>Your Cart Is Empty</h4>
-    <button class="btn btn-primary btn-lg mt-3" routerLink="/">GO TO SHOP</button>
+    <button class="btn btn-primary btn-lg mt-3" (click)="setTestItems()">GO TO SHOP</button>
   </div>
 
   <ng-container *ngIf="items.length !== 0">
@@ -21,12 +21,12 @@
           <tbody>
           <tr *ngFor="let cartItem of this.items">
             <td class="d-flex align-items-center justify-content-around" >
-              <img [src]="cartItem.product.image" alt="{{cartItem.product.name}}" height="60" class="order-1">
+              <img [src]="cartItem.goods.image" alt="{{cartItem.goods.name}}" height="60" class="order-1">
               <span class="text-danger" style="cursor: pointer;"><i class="fa fa-trash" (click)="delete(cartItem)"></i></span>
             </td>
-            <td><p>{{cartItem.product.name}}</p></td>
+            <td><p>{{cartItem.goods.name}}</p></td>
             <td>
-              <p>{{cartItem.product.price | currency:'USD'}}</p>
+              <p>{{cartItem.goods.price | currency:'USD'}}</p>
             </td>
             <td>
               <form>
@@ -42,7 +42,7 @@
                   (focusout)="cartItem.quantity==null ? cartItem.quantity = 1 : '';"
                   [value]="cartItem.quantity"
                   [min]="0"
-                  [max]="cartItem.product.quantity"
+                  [max]="cartItem.goods.quantity"
                 />
                 <div class="value-button" id="increase" (click)="increaseQuantityByOne(cartItem)">
                   <i class="fa fa-plus"></i>

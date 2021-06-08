@@ -12,72 +12,70 @@ export class CartComponent implements OnInit {
   constructor(private cartService: CartService){}
 
   ngOnInit() {
-    let cartItems: CartItem[] = this.cartService.getCart().getItems();
-    if(cartItems.length == 0){
-      cartItems = [
-        {
-          product: {
-            id: 1,
-            name: 'prod1',
-            category: 'category1',
-            description: 'description',
-            image: 'image',
-            price: 20,
-            quantity: 30,
-            images: "images",
-          },
-          quantity: 2,
-          addingTime: Math.floor(Date.now() / 1000)
-        }, {
-          product:{
-            id: 2,
-            name: 'prod2',
-            category: 'category1',
-            description: 'description',
-            image: 'image',
-            price: 50,
-            quantity: 100,
-            images: "images",
-          },
-          quantity: 6,
-          addingTime: Math.floor(Date.now() / 1000)
-        }, {
-          product:{
-            id: 3,
-            name: 'prod3',
-            category: 'category1',
-            description: 'description',
-            image: 'image',
-            price: 13,
-            quantity: 100,
-            images: "images",
-          },
-          quantity: 10,
-          addingTime: Math.floor(Date.now() / 1000)}
-      ]
-    }
-    this.cartService.getCart().setItems(cartItems);
     this.items = this.cartService.getCart().getItems();
   }
 
+  public setTestItems() {
+    let cartItems: CartItem[] = [
+      {
+        goods: {
+          id: 1,
+          name: 'prod1',
+          category: 'category1',
+          description: 'description',
+          image: 'image',
+          price: 20,
+          quantity: 30,
+        },
+        quantity: 2,
+        addingTime: Math.floor(Date.now() / 1000)
+      }, {
+        goods: {
+          id: 2,
+          name: 'prod2',
+          category: 'category1',
+          description: 'description',
+          image: 'image',
+          price: 50,
+          quantity: 100,
+        },
+        quantity: 6,
+        addingTime: Math.floor(Date.now() / 1000)
+      }, {
+        goods: {
+          id: 3,
+          name: 'prod3',
+          category: 'category1',
+          description: 'description',
+          image: 'image',
+          price: 13,
+          quantity: 100,
+        },
+        quantity: 10,
+        addingTime: Math.floor(Date.now() / 1000)
+      }
+    ]
+    this.cartService.getCart().setItems(cartItems);
+  }
+
   increaseQuantityByOne(cartItem: CartItem): void {
-    this.cartService.addProduct(cartItem.product);
+    this.cartService.addProduct(cartItem.goods);
   }
 
   decreaseQuantityByOne(cartItem: CartItem): void {
-    this.cartService.removeProduct(cartItem.product);
+    this.cartService.removeProduct(cartItem.goods);
   }
 
   setQuantity(cartItem: CartItem, quantity: number): void {
-    this.cartService.setProductQuantity(cartItem.product, quantity);
+    this.cartService.setProductQuantity(cartItem.goods, quantity);
   }
 
   delete(cartItem: CartItem): void {
-    this.cartService.deleteProduct(cartItem.product);
+    this.cartService.deleteProduct(cartItem.goods);
   }
 
   getSubtotalPrice(cartItem: CartItem): number {
-    return cartItem.quantity*cartItem.product.price
+    return cartItem.quantity*cartItem.goods.price
   }
 
   getTotalPrice(cartItems: CartItem[]): number {
