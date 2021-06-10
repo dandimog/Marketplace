@@ -1,10 +1,102 @@
 <div class="container">
+  <h1 class="mt-3">Checkout form</h1>
+  <hr />
+
   <div *ngIf="items.length === 0" class="text-center my-5">
     <h4>Your Cart Is Empty</h4>
     <button class="btn btn-primary btn-lg mt-3" routerLink="/products">GO TO SHOP</button>
   </div>
 
   <div *ngIf="items.length !== 0">
-    <h1>it works</h1>
+    <div class="row d-flex p-2 justify-content-center">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" class="form-control" />
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>Surname</label>
+          <input type="text" class="form-control" />
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="text" class="form-control" />
+        </div>
+      </div>
+    </div>
+
+    <div class="row d-flex p-2 justify-content-center">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>Delivery Time</label>
+          <select class="form-control">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="text" class="form-control" />
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>Address</label>
+          <input type="text" class="form-control" />
+        </div>
+      </div>
+    </div>
+
+    <div class="row d-flex p-2 justify-content-center">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Comment</label>
+          <textarea class="form-control" rows="2"></textarea>
+        </div>
+      </div> 
+    </div>
+
+    <div class="row d-flex p-2 justify-content-center">
+      <div class="col-md-2">
+        <div class="form-group">
+          <input type="checkbox" class="form-check-input">
+          <label>Don't disturb?</label>
+        </div>
+        
+      </div> 
+    </div>
+
+    <div class="row d-flex p-2 justify-content-center">
+      <div class="col-md-3">
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary btn-block">Submit</button>
+        </div>
+      </div> 
+    </div>
+    <hr />
+    <h1>Items</h1>
+    <hr />
   </div>
 </div>
+
+<!-- 
+  <div class="col-md-3">
+        <div class="form-group">
+          <label>Comment</label>
+          <textarea class="form-control" rows="2"></textarea>
+        </div>
+      </div> 
+    -->

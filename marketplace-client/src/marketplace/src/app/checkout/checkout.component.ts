@@ -15,5 +15,21 @@ export class CheckoutComponent implements OnInit {
     this.items = this.cartService.getCart().getItems();
   }
 
+  getSubtotalPrice(cartItem: CartItem): number {
+    return cartItem.quantity*this.getPrice(cartItem);
+  }
+
+  getTotalPrice(cartItems: CartItem[]): number {
+    let totalPrice: number = 0;
+    cartItems.forEach( cartItem => {
+      totalPrice+=this.getSubtotalPrice(cartItem);
+    })
+    return totalPrice;
+  }
+
+  getPrice(cartItem: CartItem): number{
+    return cartItem.goods.price-cartItem.goods.price*(cartItem.goods.discount/100);
+  }
+
 
 }
