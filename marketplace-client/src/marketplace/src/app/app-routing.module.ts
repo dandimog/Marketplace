@@ -6,6 +6,7 @@ import { AuthGuardService } from './_auth/auth.guard.service';
 import { Role } from './_models/role';
 import { RoleGuardService } from './_auth/auth.guard.role.service';
 import { CartComponent } from './cart/cart.component';
+import { CheckoutComponent } from './checkout/checkout.component';
 
 const accountModule = () =>
   import('./account/account.module').then(
@@ -42,6 +43,10 @@ const routes: Routes = [
   {
     path: 'products',
     loadChildren: productCatalogModule,
+  },
+  {
+    path: 'checkout',
+    component: CheckoutComponent
   },
   {
     path: '**',

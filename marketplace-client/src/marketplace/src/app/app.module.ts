@@ -21,6 +21,7 @@ import {
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ProductCatalogModule } from './product-catalog/product-catalog.module';
+import { CheckoutComponent } from './checkout/checkout.component';
 @NgModule({
   imports: [
     BrowserModule,
@@ -37,7 +38,7 @@ import { ProductCatalogModule } from './product-catalog/product-catalog.module';
     FormsModule,
     ToastrModule.forRoot(),
   ],
-  declarations: [AppComponent, HomeComponent, CartComponent],
+  declarations: [AppComponent, HomeComponent, CartComponent, CheckoutComponent],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
