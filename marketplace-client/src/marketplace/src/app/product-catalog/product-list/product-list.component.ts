@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Product } from 'src/app/_models/products/product';
-import { ProductService } from 'src/app/_services/product.service';
 
 @Component({
   selector: 'app-product-list',
@@ -9,4 +8,9 @@ import { ProductService } from 'src/app/_services/product.service';
 })
 export class ProductListComponent {
   @Input() products: Product[] = [];
+
+ /* createUser() {
+    this.service.navigateToRegisterStaff(); navigateToAddProduct
+  } */
 }
+

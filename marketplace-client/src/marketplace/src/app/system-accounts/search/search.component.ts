@@ -11,6 +11,7 @@ import { debounceTime, map, switchAll } from 'rxjs/operators';
 import { StaffMember } from 'src/app/_models/staff-member';
 import { UserDto } from 'src/app/_models/UserDto';
 import { SystemAccountService } from 'src/app/_services/system-account.service';
+import {Product} from "../../_models/products/product";
 
 @Component({
   selector: 'app-search',

@@ -11,6 +11,9 @@ import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { AccountListComponent } from './account-list/account-list.component';
 import {ProfileComponent} from "./profile/profile.component";
 import {UpdateInfoComponent} from "./update-info/update-info.component";
+import {UpdateProductComponent} from "./update-product/update-product.component";
+import {AddProductComponent} from "./add-product/add-product.component";
+
 
 @NgModule({
   declarations: [
@@ -22,6 +25,8 @@ import {UpdateInfoComponent} from "./update-info/update-info.component";
     AccountListComponent,
     ProfileComponent,
     UpdateInfoComponent,
+    AddProductComponent,
+    UpdateProductComponent,
   ],
   imports: [
     CommonModule,

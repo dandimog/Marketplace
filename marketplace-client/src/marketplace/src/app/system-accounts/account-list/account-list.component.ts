@@ -25,6 +25,7 @@ export class AccountListComponent {
   createUser() {
     this.service.navigateToRegisterStaff();
   }
+
   changeInfo(id:number, role:string){
     if(role.localeCompare("ROLE_PRODUCT_MANAGER" )) {
       this.service.navigateToUpdatedStaff(id, 1);

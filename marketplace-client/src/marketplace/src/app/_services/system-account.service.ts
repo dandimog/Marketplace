@@ -187,6 +187,16 @@ export class SystemAccountService {
     this.router.navigate([currentUrl]);
   }
 
+  navigateToUpdateProduct(id:number){
+    let currentUrl = this.router.url;
+    let subpath = this.router.url.split('/');
+    currentUrl = currentUrl.replace(
+      subpath[subpath.length - 1],
+      '/update-product/' + id
+    );
+    this.router.navigate([currentUrl]);
+  }
+
 }
 /*{
     "dateOfBirth": "undefined",

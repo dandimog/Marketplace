@@ -195,4 +195,14 @@ export class ProductService {
   private isBlank(str: string): boolean {
     return !str || /^\s*$/.test(str);
   }
+
+  navigateToAddProduct() {
+    let currentUrl = this.router.url;
+    let subpath = this.router.url.split('/');
+    currentUrl = currentUrl.replace(
+      subpath[subpath.length - 1],
+      'register-stuff'
+    );
+    this.router.navigate([currentUrl]);
+  }
 }

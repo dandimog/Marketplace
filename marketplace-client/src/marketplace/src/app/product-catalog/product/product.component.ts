@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Product } from 'src/app/_models/products/product';
 import { CartService } from 'src/app/_services/cart/cart.service';
 import { ProductService } from 'src/app/_services/product.service';
+import { SystemAccountService } from 'src/app/_services/system-account.service';
 
 @Component({
   selector: 'app-product',
@@ -11,7 +12,7 @@ import { ProductService } from 'src/app/_services/product.service';
 export class ProductComponent implements OnInit {
   constructor(
     private service: ProductService,
-    private cartService: CartService
+    private cartService: CartService,
   ) {}
   product: Product = new Product(0, '', '', 0, 0, '', 0, false, '', '');
 
@@ -25,4 +26,6 @@ export class ProductComponent implements OnInit {
     console.log(this.product);
     this.cartService.addProduct(this.product);
   }
+
+
 }
