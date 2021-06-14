@@ -104,9 +104,9 @@
               [ngClass]="{ 'is-invalid': getForm.deliveryTime.errors }">
 
               <option></option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
+              <option *ngFor="let time of deliveryTime">
+                {{ time }}
+              </option>
             </select>
             <div *ngIf="getForm.deliveryTime.errors" class="invalid-feedback">
               <div *ngIf="getForm.deliveryTime.errors.required">Choose delivery time</div>

@@ -13,6 +13,7 @@ import { Checkout } from "../_services/checkout/checkout.service";
 })
 export class CheckoutComponent implements OnInit {
   items: CartItem[] = [];
+  deliveryTime: string[] = [];
   orderDetailsForm: FormGroup;
   submitted = false;
   authUser: User = {};
@@ -39,6 +40,10 @@ export class CheckoutComponent implements OnInit {
   ngOnInit(): void {
     this.items = this.cartService.getCart().getItems();
     this.getAuthUserInfo();
+    this.checkoutService.getDeliveryTime()
+    .subscribe(
+      data => this.deliveryTime = data
+    );
   }
 
   getSubtotalPrice(cartItem: CartItem): number {
@@ -51,6 +56,14 @@ export class CheckoutComponent implements OnInit {
       totalPrice+=this.getSubtotalPrice(cartItem);
     })
     return totalPrice;
+  }
+
+  getTotalDiscount(cartItem: CartItem[]): number {
+    let totalDiscount: number = 0;
+    cartItem.forEach(item => {
+      totalDiscount += item.goods.discount;
+    });
+    return totalDiscount;
   }
 
   getPrice(cartItem: CartItem): number{
@@ -68,7 +81,7 @@ export class CheckoutComponent implements OnInit {
       this.orderDetailsForm.patchValue({
         name: this.authUser.name,
         surname: this.authUser.surname,
-        phone: '+380687564849'//this.authUser.phone
+        phone: this.authUser.phone
       });
     }
 
@@ -81,16 +94,56 @@ export class CheckoutComponent implements OnInit {
 
   private getAuthUserInfo() {
     if(this.isAuth()) {
-      this.checkoutService.getUserByEmail(this.authService.getMail())
+      this.checkoutService.getUser()
         .subscribe((user: User) => this.authUser=user);
       
     }
   }
 
   doOrder() {
-    this.submitted = false;
-    this.browserCart.empty();
-    this.items = [];
+    const mappedItems: any[] = [];
+    this.items.map(item => {
+      mappedItems.push({
+        categoryName: item.goods.categoryName,
+        description: item.goods.description,
+        discount: item.goods.discount,
+        firmName: item.goods.firmName,
+        goodName: item.goods.goodName,
+        goodsId: item.goods.id,
+        inStock: item.goods.inStock,
+        price: item.goods.price,
+        unit: item.goods.unit,
+        quantity: item.quantity
+      })
+    })
+
+
+    const receiveObj = {
+      name: this.orderDetailsForm.value['name'],
+      surname: this.orderDetailsForm.value['surname'],
+      phone: this.orderDetailsForm.value['phone'],
+      address: this.orderDetailsForm.value['address'],
+      deliveryTime: this.orderDetailsForm.value['deliveryTime'],
+      comment: this.orderDetailsForm.value['comment'],
+      disturb: this.orderDetailsForm.value['disturb'],
+      totalSum: this.getTotalPrice(this.items),
+      discountSum: this.getTotalPrice(this.items) - this.getTotalDiscount(this.items),
+      items: mappedItems,
+    }
+
+    this.checkoutService.sendOrderDetails(receiveObj)
+      .subscribe(
+        () => {
+          this.submitted = false;
+          this.browserCart.empty();
+          this.items = [];
+          console.log("Succes!")
+        }, 
+        (msg) => {
+          console.log("Error: " + msg);
+        }
+    );
+    
   }
 
   hideBanner() {
