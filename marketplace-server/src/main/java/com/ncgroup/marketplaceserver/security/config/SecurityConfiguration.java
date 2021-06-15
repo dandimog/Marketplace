@@ -64,6 +64,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
                     .hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/api/courier")
                     .hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/orders/**")
+                	.hasRole("COURIER")
                 .and()
 
                 //.exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler)
@@ -77,7 +79,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
 		web.ignoring()
 			.antMatchers("/swagger/swagger-ui/**", "/v3/api-docs/**")
 			.antMatchers("/api/register", "/api/login","/api/confirm-account","/api/reset-password")
-			.antMatchers("/api/confirm-passreset/**", "/api/confirm-passcreate/**", "/api/setnewpassword/**");
+			.antMatchers("/api/confirm-passreset/**", "/api/confirm-passcreate/**", "/api/setnewpassword/**")
+			.antMatchers("/api/shopping-cart/validate/")
+			.antMatchers("/api/orders/freeslots", "/api/orders/userinfo");
 	}
 
     @Bean

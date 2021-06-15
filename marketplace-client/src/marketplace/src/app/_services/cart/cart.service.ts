@@ -1,10 +1,10 @@
 import {Inject, Injectable} from '@angular/core';
-import {Product} from "../../_models/product.model";
 import {CartItem} from "../../_models/cart-item.model";
 import {PageCart} from "./page-cart";
 import {GlobalCart} from "./global-cart";
 import {Cart} from "./cart";
 import {BrowserCart} from "./browser-cart";
+import {Product} from "../../_models/products/product";
 
 @Injectable({
   providedIn: 'root'
@@ -57,4 +57,3 @@ export class CartService {
     this.cart.removeItem(item);
   }
 }
-

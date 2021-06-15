@@ -9,6 +9,7 @@ import { RegisterStuffComponent } from './register-stuff/register-stuff.componen
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { AccountListComponent } from './account-list/account-list.component';
+import { UpdateInfoComponent } from './update-info/update-info.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { AccountListComponent } from './account-list/account-list.component';
     FilterComponent,
     RegisterStuffComponent,
     AccountListComponent,
+    UpdateInfoComponent,
   ],
   imports: [
     CommonModule,

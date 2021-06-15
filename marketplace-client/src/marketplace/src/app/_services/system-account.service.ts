@@ -4,6 +4,8 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable, of, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { UserDto } from '../_models/UserDto';
+import { ResetPasswordDTO } from '../_models/resetPasswordDTO';
+import { StaffMember } from '../_models/staff-member';
 
 const baseUrl = `${environment.apiUrl}`;
 
@@ -17,7 +19,7 @@ export class SystemAccountService {
   readonly ALL = 'all';
   readonly ACTIVE = 'active';
   readonly INACTIVE = 'inactive';
-  readonly TERMINATED = 'disabled';
+  readonly TERMINATED = 'terminated';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -61,7 +63,7 @@ export class SystemAccountService {
     }
   }
 
-  private addQueryParams(filter: string, search: string, page: number): string {
+  private addQueryParams(filter: string, search: string, page: number) {
     //filter = this.validateFilter(filter);
     let currentUrl = this.router.url.split('?')[0];
     if (!this.isBlank(search)) {
@@ -73,19 +75,10 @@ export class SystemAccountService {
           search: search,
         },
       });
-      currentUrl =
-        currentUrl +
-        '?filter=' +
-        filter +
-        '&page=' +
-        page +
-        '&search=' +
-        search;
     } else {
       this.router.navigate([currentUrl], {
         queryParams: { filter: filter, page: page },
       });
-      currentUrl = currentUrl + '?filter=' + filter + '&page=' + page;
     }
     return currentUrl;
   }
@@ -146,7 +139,7 @@ export class SystemAccountService {
     return statusList;
   }
 
-  //checks whether string blank,null or undefined
+  //checks whether string blank, null or undefined
   private isBlank(str: string): boolean {
     return !str || /^\s*$/.test(str);
   }
@@ -157,4 +150,40 @@ export class SystemAccountService {
       this.pageSource.next(res.currentPage);
     });
   }
+
+  getCourierProfileInfo(id: number) {
+    return this.http.get(`${baseUrl}/courier/` + id);
+  }
+
+  getManagerProfileInfo(id: number) {
+    return this.http.get(`${baseUrl}/manager/` + id);
+  }
+
+  updateCourierInfo(account: StaffMember, id: number): Observable<any> {
+    return this.http.patch(`${baseUrl}/courier/` + id, account);
+  }
+
+  updateManagerInfo(account: StaffMember, id: number): Observable<any> {
+    return this.http.patch(`${baseUrl}/manager/` + id, account);
+  }
+
+  navigateToUpdatedStaff(id: number, role: number) {
+    let currentUrl = this.router.url;
+    let subpath = this.router.url.split('/');
+    currentUrl = currentUrl.replace(
+      subpath[subpath.length - 1],
+      'role/' + role + '/update-info/' + id
+    );
+    this.router.navigate([currentUrl]);
+  }
 }
+/*{
+    "dateOfBirth": "undefined",
+    "email": "dwf6h@vmani.com",
+    "id": 3,
+    "name": "Artem",
+    "phone": "+380934460974",
+    "role": "ROLE_PRODUCT_MANAGER",
+    "status": "inactive",
+    "surname": "Krivoruchenko"
+}*/

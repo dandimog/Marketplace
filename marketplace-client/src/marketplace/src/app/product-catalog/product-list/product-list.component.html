@@ -1,0 +1,41 @@
+
+<div class="container product-list-container">
+  <div class="row flex-lg-nowrap">
+    <div class="col">
+      <div class="row flex-lg-nowrap">
+        <div class="col-12 col-lg-3 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <app-search (results)="products = search.getProducts()" #search></app-search>
+              <app-filter (results)="products = filter.getProducts()" #filter>
+              </app-filter>
+            </div>
+          </div>
+        </div>
+        <div class="col mb-3">
+          <div class="e-panel card">
+            <div class="row row-cols-1 row-cols-md-3 g-4 list" >
+                      <app-product-card *ngFor="let product of products" [product]="product">
+                      </app-product-card>
+            </div>
+                </div>
+
+                <!--<div class="card-deck ">
+                  <div *ngFor="let product of products" routerLink="{{product.id}}" class="card">
+                    <img class="card-img-top" alt="Card image cap">
+                    <div class="card-body">
+                      <h5 class="card-title">{{product.goodName}}</h5>
+                      <p class="card-text">Price: {{product.price}} per {{product.unit}}</p>
+                      <p class="card-text">
+                        <small *ngIf="product.inStock" class="text-muted">In stock</small>
+                        <small *ngIf="!product.inStock" class="text-muted">Out of stock</small>
+                      </p>
+                    </div>
+                  </div>
+                </div> -->
+                <app-pagination (results)="products = page.getProducts()" #page></app-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { StaffMember } from 'src/app/_models/staff-member';
 import { SystemAccountService } from 'src/app/_services/system-account.service';
+import {AuthService} from "../../_auth/auth.service";
 
 @Component({
   selector: 'app-account-list',
@@ -12,6 +13,7 @@ export class AccountListComponent {
   constructor(
     private cdr: ChangeDetectorRef,
     private service: SystemAccountService
+    // private helper: AuthService
   ) {}
 
   ngAfterViewInit() {
@@ -19,10 +21,19 @@ export class AccountListComponent {
   }
 
   getStatusList() {
+    // this.helper.getMail(); //!!!!
     return this.service.getStatusList();
   }
 
   createUser() {
     this.service.navigateToRegisterStaff();
+  }
+  changeInfo(id:number, role:string){
+    if(role.localeCompare("ROLE_PRODUCT_MANAGER" )) {
+      this.service.navigateToUpdatedStaff(id, 1);
+    }
+    else if (role.localeCompare("ROLE_COURIER")){
+      this.service.navigateToUpdatedStaff(id, 2);
+    }
   }
 }
