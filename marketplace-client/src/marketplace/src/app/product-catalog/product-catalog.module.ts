@@ -10,6 +10,8 @@ import { ProductComponent } from './product/product.component';
 import {AddProductComponent} from "./add-product/add-product.component";
 import {ReactiveFormsModule} from "@angular/forms";
 import {UpdateProductComponent} from "./update-product/update-product.component";
+import {ProductCardComponent} from "./product-card/product-card.component";
+
 
 @NgModule({
   declarations: [
@@ -18,6 +20,7 @@ import {UpdateProductComponent} from "./update-product/update-product.component"
     SearchComponent,
     PaginationComponent,
     ProductComponent,
+    ProductCardComponent,
     AddProductComponent,
     UpdateProductComponent,
   ],
