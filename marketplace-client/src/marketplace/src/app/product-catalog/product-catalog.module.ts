@@ -7,7 +7,7 @@ import { FilterComponent } from './filter/filter.component';
 import { SearchComponent } from './search/search.component';
 import { PaginationComponent } from './pagination/pagination.component';
 import { ProductComponent } from './product/product.component';
-
+import {AddProductComponent} from "./add-product/add-product.component";
 
 @NgModule({
   declarations: [
@@ -15,7 +15,7 @@ import { ProductComponent } from './product/product.component';
     FilterComponent,
     SearchComponent,
     PaginationComponent,
-    ProductComponent
+    ProductComponent,
   ],
   imports: [
     CommonModule,

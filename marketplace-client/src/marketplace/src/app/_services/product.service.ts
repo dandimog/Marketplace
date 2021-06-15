@@ -7,6 +7,7 @@ import { Filter } from '../_models/products/filter';
 import { Product } from '../_models/products/product';
 import { ProductDto } from '../_models/products/productDto';
 import { catchError, switchMap } from 'rxjs/operators';
+import {StaffMember} from "../_models/staff-member";
 
 const baseUrl = `${environment.apiUrl}`;
 
@@ -201,8 +202,20 @@ export class ProductService {
     let subpath = this.router.url.split('/');
     currentUrl = currentUrl.replace(
       subpath[subpath.length - 1],
-      'register-stuff'
+      'add-product'
     );
     this.router.navigate([currentUrl]);
+  }
+
+  AddProduct(account: Product): Observable<any> {
+    return this.http.post(`${baseUrl}/products`, account);
+  }
+
+  getProductInfo(id: number){
+    return this.http.get(`${baseUrl}/products/` + id);
+  }
+
+  updateProduct(account: Product, id: number): Observable<any> {
+    return this.http.put(`${baseUrl}/products/` + id, account);
   }
 }

@@ -46,11 +46,12 @@ const routes: Routes = [
     path: 'products',
     loadChildren: productCatalogModule,
   },
-  {
+ {
     path: '**',
     pathMatch: 'full',
-    redirectTo: 'home'
+    redirectTo: 'home',
   },
+
 
 ];
 @NgModule({
