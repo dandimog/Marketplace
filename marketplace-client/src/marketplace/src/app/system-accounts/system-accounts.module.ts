@@ -25,8 +25,6 @@ import {AddProductComponent} from "../product-catalog/add-product/add-product.co
     AccountListComponent,
     ProfileComponent,
     UpdateInfoComponent,
-    UpdateProductComponent,
-    AddProductComponent,
   ],
   imports: [
     CommonModule,

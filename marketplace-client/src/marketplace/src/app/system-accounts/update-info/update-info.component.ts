@@ -94,7 +94,7 @@ export class UpdateInfoComponent implements OnInit{
 
   private mapToStaffMember(o: any): StaffMember {
     return {
-      id: -1,
+      id: this.response.id,
       name: o.name,
       surname: o.surname,
       email: this.response.email,

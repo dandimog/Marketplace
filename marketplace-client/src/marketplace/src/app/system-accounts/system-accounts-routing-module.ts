@@ -21,7 +21,6 @@ const routes: Routes = [
       { path: 'register-stuff', component: RegisterStuffComponent },
       { path: 'role/:role/profile/:id', component: ProfileComponent },
       { path: 'role/:role/update-info/:id', component: UpdateInfoComponent },
-      { path: 'add-product', component: AddProductComponent },
             /*{
         path: '',
         pathMatch: 'prefix',

@@ -10,7 +10,7 @@
 
             <div class="card-body">
               <div class="text-center px-xl-3">
-                <button class="btn btn-success" type="button" (click)="createNewProd()">Create new account</button>
+                <button class="btn btn-success" type="button" routerLink="add-product">Create new account</button>
               </div>
                <app-search (results)="products = search.getProducts()" #search> </app-search>
                <app-filter (results)="products = filter.getProducts()"  #filter>

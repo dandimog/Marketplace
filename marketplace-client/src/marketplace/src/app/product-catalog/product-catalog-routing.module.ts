@@ -14,17 +14,11 @@ const routes: Routes = [
   {
     path: '',
     component: ProductListComponent,
-    children: [
-
-      /*{
-        path: '',
-        pathMatch: 'prefix',
-        redirectTo: 'couriers',
-      },*/
-      //{ path: 'couriers/:id', component: CouriersDetails },
-    ],
+    children: [],
   },
-  { path: ':id', component: UpdateProductComponent }, //ProductComponent
+  { path: 'add-product', component: AddProductComponent },
+  { path: 'update-product/:id', component: UpdateProductComponent }, //ProductComponent
+  { path: ':id', component: ProductComponent },
   ];
 
 @NgModule({

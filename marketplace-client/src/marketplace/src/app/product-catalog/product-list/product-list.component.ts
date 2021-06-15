@@ -16,8 +16,5 @@ export class ProductListComponent {
     private service: ProductService
   ) {}
 
-  createNewProd() {
-    this.service.navigateToAddProduct();
-  }
 }
 

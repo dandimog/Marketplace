@@ -197,15 +197,6 @@ export class ProductService {
     return !str || /^\s*$/.test(str);
   }
 
-  navigateToAddProduct() {
-    let currentUrl = this.router.url;
-    let subpath = this.router.url.split('/');
-    currentUrl = currentUrl.replace(
-      subpath[subpath.length - 1],
-      'add-product'
-    );
-    this.router.navigate([currentUrl]);
-  }
 
   AddProduct(account: Product): Observable<any> {
     return this.http.post(`${baseUrl}/products`, account);
