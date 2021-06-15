@@ -81,6 +81,7 @@ export class UpdateProductComponent implements OnInit{
       quantity: o.quantity,
       price: o.price,
       unit: o.unit,
+      image:o.image,
       discount: o.discount,
       inStock: o.inStock,
       categoryName: o.categoryName,
