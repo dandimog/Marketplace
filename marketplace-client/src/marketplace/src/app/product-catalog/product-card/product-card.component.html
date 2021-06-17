@@ -6,10 +6,11 @@
     <a routerLink="{{product.id}}">{{product.goodName}}</a>
     <div class="price-block">
     <p *ngIf="product.discount" class="old-price"> {{product.price}}</p>
-    <p *ngIf="product.discount" class="new-price"> {{product.discount}} UAH</p>
+    <p *ngIf="product.discount" class="new-price"> {{(product.price*product.discount/100).toFixed(2)}} UAH</p>
     <p *ngIf="!product.discount" class="price"> {{product.price}} UAH</p>
     </div>
-    <button type="button" (click)="addToCart()" class="cart btn btn-default"><i class="fas fa-shopping-cart"></i></button>
+    <button type="button" (click)="addToCart()" class="cart btn btn-default"><i class="fas fa-shopping-cart"></i>
+    </button>
   </div>
 </div>
 </div>

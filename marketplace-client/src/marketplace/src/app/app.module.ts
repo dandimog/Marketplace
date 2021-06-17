@@ -23,6 +23,7 @@ import { ProductCatalogModule } from './product-catalog/product-catalog.module';
 import { ProductComparisonComponent } from './_components/product-comparison/product-comparison.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import {AlertComponent} from './_components/alert/alert.component';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import {AlertComponent} from './_components/alert/alert.component';
     NgxSpinnerModule,
     FormsModule,
     ToastrModule.forRoot(),
+    NgxSliderModule,
   ],
   declarations: [AppComponent, HomeComponent, CartComponent, AlertComponent, ProductComparisonComponent, CheckoutComponent],
   providers: [

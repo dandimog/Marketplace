@@ -8,6 +8,8 @@ import { SearchComponent } from './search/search.component';
 import { PaginationComponent } from './pagination/pagination.component';
 import { ProductComponent } from './product/product.component';
 import {ProductCardComponent} from "./product-card/product-card.component";
+import {NgxSliderModule} from "@angular-slider/ngx-slider";
+import {FormsModule} from "@angular/forms";
 
 
 @NgModule({
@@ -19,9 +21,11 @@ import {ProductCardComponent} from "./product-card/product-card.component";
     ProductComponent,
     ProductCardComponent
   ],
-  imports: [
-    CommonModule,
-    ProductCatalogRoutingModule
-  ]
+    imports: [
+        CommonModule,
+        ProductCatalogRoutingModule,
+        NgxSliderModule,
+        FormsModule
+    ]
 })
 export class ProductCatalogModule { }

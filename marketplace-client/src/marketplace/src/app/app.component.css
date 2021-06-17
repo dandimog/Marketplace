@@ -118,6 +118,11 @@
   font-size: 70%;
   padding-top: 5px;
   padding-bottom: 5px;
+  outline: none;
+}
+
+.cart-btn:focus {
+  box-shadow: 0 0 2pt 2pt #7fc5ee;
 }
 
 .fa-shopping-cart {

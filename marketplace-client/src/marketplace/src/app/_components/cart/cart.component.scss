@@ -3,8 +3,8 @@
   }
 
   form {
-    width: 300px;
     margin: 0 auto;
+    min-width: 150px;
     text-align: center;
   }
 
@@ -31,17 +31,17 @@
   }
 
   form #decrease {
-    margin-right: -4px;
-    border-radius: 8px 0 0 8px;
-    background: red;
-    color: white;
+    margin-right: 4px;
+    color: #007dc3;
+    background-color: #fff;
+    border: none;
   }
 
   form #increase {
-    margin-left: -4px;
-    border-radius: 0 8px 8px 0;
-    background: green;
-    color: white;
+    margin-left: 4px;
+    color: #007dc3;
+    background-color: #fff;
+    border: none;
   }
 
   /* form #input-wrap {
@@ -51,13 +51,17 @@
 
   input#number {
     text-align: center;
-    border: none;
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     margin: 0px;
     width: 40px;
     height: 40px;
+    outline: none;
   }
+
+input#number:focus {
+  box-shadow: 0 0 2pt 2pt #7fc5ee;
+}
 
   input[type=number]::-webkit-inner-spin-button,
   input[type=number]::-webkit-outer-spin-button {
@@ -67,36 +71,64 @@
 
   tbody {
     tr {
-      &:not(:last-of-type) {
         td {
           border-right: 1px solid #dee2e6;
-
+          border-bottom: 1px solid #dee2e6;
           &:first-of-type {
             border-left: 1px solid #dee2e6;
           }
         }
-      }
-
-      &:last-of-type {
-        td {
-
-          &:first-child {
-            border-top: 1px solid #dee2e6 !important;
-          }
-
-          &:nth-child(4), &:nth-child(5) {
-            border-left: 1px solid #dee2e6;
-            border-right: 1px solid #dee2e6;
-            border-bottom: 1px solid #dee2e6;
-            font-weight: bold;
-            font-size: 1.3rem;
-            text-align: center;
-          }
-
-
-        }
-
-      }
-
     }
   }
+
+  .cart-table{
+    background-color: #007dc3;
+    color: #fff;
+  }
+
+  .delete-icon {
+    cursor: pointer;
+    color: #7B7B7B;
+  }
+
+  .good-name {
+    text-transform: capitalize;
+    color: #000;
+  }
+
+  .total {
+    background-color: #cfe6f3;
+    border: 1px solid #007dc3;
+    border-radius: 4px;
+    padding: 25px 25px;
+    font-size: 25px;
+    font-weight: 600;
+
+    a {
+      color: #fff;
+      background-color: #007dc3;
+      padding: 10px 20px;
+      margin-left: 20px;
+      font-weight: 600;
+      font-size: 18px;
+    }
+  }
+
+  .back-btn {
+    display: inline-block;
+    border: 1px solid #007dc3;
+    color: #007dc3;
+    font-size: 18px;
+    height: 50px;
+    padding: 10px 10px;
+  }
+
+  .min-value-btn {
+    background-color: #fff;
+    outline: none;
+    border: none;
+    cursor: default !important;
+    margin-right: 4px;
+    color: #c1c1c1;
+  }
+
