@@ -1,3 +1,4 @@
+
 INSERT INTO role (role )
 VALUES
 ('ROLE_USER'),
@@ -30,6 +31,7 @@ INSERT INTO product(name, category_id) values ('banana', 1),
                                               ('fanta', 4),
                                               ('peach', 1),
                                               ('apple', 1);
+
 INSERT INTO goods(prod_id, firm_id, price, unit, discount,
                   shipping_date, in_stock, status, image, description, quantity) values
 (1, 1, 40, 'KILOGRAM', 50, null, true, null, null, 'Casual Roshen Banana', 20),

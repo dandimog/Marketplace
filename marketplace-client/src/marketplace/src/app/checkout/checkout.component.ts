@@ -12,7 +12,8 @@ import {Router} from "@angular/router";
 
 @Component({
   selector: 'mg-checkout',
-  templateUrl: './checkout.component.html'
+  templateUrl: './checkout.component.html',
+  styleUrls: ['./checkout.component.scss']
 })
 export class CheckoutComponent implements OnInit {
   items: CartItem[] = [];
@@ -118,7 +119,8 @@ export class CheckoutComponent implements OnInit {
         inStock: item.goods.inStock,
         price: item.goods.price,
         unit: item.goods.unit,
-        quantity: item.quantity
+        quantity: item.quantity,
+        addingTime: item.addingTime
       })
     })
 

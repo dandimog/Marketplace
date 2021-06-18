@@ -44,11 +44,6 @@
     border: none;
   }
 
-  /* form #input-wrap {
-    margin: 0px;
-    padding: 0px;
-  } */
-
   input#number {
     text-align: center;
     border: 1px solid #ddd;
@@ -63,11 +58,11 @@ input#number:focus {
   box-shadow: 0 0 2pt 2pt #7fc5ee;
 }
 
-  input[type=number]::-webkit-inner-spin-button,
-  input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
   tbody {
     tr {

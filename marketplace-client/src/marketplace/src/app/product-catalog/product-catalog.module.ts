@@ -10,6 +10,11 @@ import { ProductComponent } from './product/product.component';
 import {ProductCardComponent} from "./product-card/product-card.component";
 import {NgxSliderModule} from "@angular-slider/ngx-slider";
 import {FormsModule} from "@angular/forms";
+import {AddProductComponent} from "./add-product/add-product.component";
+import {UpdateProductComponent} from "./update-product/update-product.component";
+import {ReactiveFormsModule} from "@angular/forms";
+import {AppModule} from "../app.module";
+import {FileUploadingModule} from "../file-uploading/file-uploading.module";
 
 
 @NgModule({
@@ -19,13 +24,18 @@ import {FormsModule} from "@angular/forms";
     SearchComponent,
     PaginationComponent,
     ProductComponent,
-    ProductCardComponent
+    ProductCardComponent,
+    AddProductComponent,
+    UpdateProductComponent,
   ],
     imports: [
         CommonModule,
         ProductCatalogRoutingModule,
         NgxSliderModule,
-        FormsModule
+        FormsModule,
+        ReactiveFormsModule,
+        ProductCatalogRoutingModule,
+        FileUploadingModule
     ]
 })
 export class ProductCatalogModule { }
