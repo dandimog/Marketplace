@@ -1,0 +1,51 @@
+.card-img-top {
+  padding: 20px 20px;
+  max-width: 300px;
+}
+
+.card-title {
+  text-transform: capitalize;
+}
+
+.card-subtitle {
+  text-transform: capitalize;
+
+}
+
+.card-body a {
+  color: #000;
+  font-size: 25px;
+}
+
+.list-group-item {
+  text-transform: lowercase;
+}
+
+.list-group-item::first-letter {
+  text-transform: capitalize;
+}
+
+.remove-btn {
+  position: absolute;
+  right: -5px;
+  color: #007dc3;
+}
+
+.fa-times-circle {
+  font-size: 30px;
+}
+
+.buy-btn {
+  background-color: #007dc3;
+  color: #fff;
+  z-index: 100;
+}
+
+.buy-btn:hover {
+  box-shadow: 0 0 6pt 2pt #7fc5ee;
+}
+
+.store-btn {
+  background-color: #007dc3;
+  color: #fff;
+}

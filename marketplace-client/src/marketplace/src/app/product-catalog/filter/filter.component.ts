@@ -77,6 +77,7 @@ export class FilterComponent implements OnInit {
     console.log(category);
     this.filters.category = category;
     this.filters.maxPrice = 99999;
+    this.filters.minPrice = 0;
     this.filter(this.filters, false, true);
   }
 

@@ -81,6 +81,11 @@ input#number:focus {
     }
   }
 
+  .card-img-top {
+    max-width: 100px;
+    min-width: 30px;
+  }
+
   .cart-table{
     background-color: #007dc3;
     color: #fff;
@@ -130,5 +135,10 @@ input#number:focus {
     cursor: default !important;
     margin-right: 4px;
     color: #c1c1c1;
+  }
+
+  .store-btn {
+    background-color: #007dc3;
+    color: #fff;
   }
 

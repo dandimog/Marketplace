@@ -18,10 +18,12 @@ export class ProductComponent implements OnInit {
   ) {}
 
   product: Product = new Product(0, '', '', 0, 0, '', 0, false, '', '', '');
+  comparison: boolean = false;
 
   ngOnInit(): void {
     this.service.getProduct().subscribe((result: Product) => {
       this.product = result;
+      this.comparison = this.inComparison();
     });
   }
 
@@ -29,7 +31,13 @@ export class ProductComponent implements OnInit {
     console.log(this.product);
     this.cartService.addProduct(this.product);
   }
+
   addToComparison() {
+    this.comparison = true;
     this.comparisonService.addProduct(this.product);
+  }
+
+  inComparison():boolean {
+    return this.comparisonService.getProducts().find(product => product.id==this.product.id)!=undefined;
   }
 }
