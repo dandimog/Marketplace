@@ -18,15 +18,18 @@ export class FilterComponent implements OnInit {
   products: Product[] = [];
   subscription!: Subscription;
   categorySubscription!: Subscription;
+  rangeSubscription!: Subscription;
   minPrice: number = 0;
   maxPrice: number = 99999;
   options: Options = {
     floor: 0,
-    ceil: 400,
+    ceil: 99999,
     showTicks: false,
   };
   @Input() sort: string = "name";
+  @Output() sortChange = new EventEmitter<string>();
   @Input() direction: string = "ASC";
+  @Output() directionChange = new EventEmitter<string>();
   @Output() results: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private service: ProductService) {}
@@ -34,16 +37,20 @@ export class FilterComponent implements OnInit {
   ngOnInit(): void {
     this.getCategories();
     this.filters = this.getFilter();
-    this.filters.sort=this.sort;
-    this.filters.direction=this.direction;
-    this.filters.maxPrice=this.maxPrice;
-    this.filters.minPrice=this.minPrice;
+    this.sort=this.filters.sort;
+    this.direction=this.filters.direction;
+    this.sortChange.emit(this.sort);
+    this.directionChange.emit(this.direction);
+    this.minPrice=this.filters.minPrice;
+    this.maxPrice=this.filters.maxPrice;
+    this.getPriceRange();
     this.filter(this.filters, true);
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.categorySubscription.unsubscribe();
+    this.rangeSubscription.unsubscribe();
   }
 
   ngOnChanges():void{
@@ -58,17 +65,10 @@ export class FilterComponent implements OnInit {
     this.subscription = this.service
       .getFilteredProducts(filter, init)
       .subscribe((results: ProductDto) => {
-        this.products = results.result_set;
-        if(category || init){
-          const maxPrice = this.getMaxPrice();
-          this.options= {
-            floor: 0,
-            ceil: maxPrice,
-            showTicks: false,
-          };
-          this.minPrice = 0;
-          this.maxPrice = maxPrice;
+        if(category){
+          this.getPriceRange();
         }
+        this.products = results.result_set;
         this.results.emit();
       });
   }
@@ -76,8 +76,6 @@ export class FilterComponent implements OnInit {
   chooseCategory(category: string) {
     console.log(category);
     this.filters.category = category;
-    this.filters.maxPrice = 99999;
-    this.filters.minPrice = 0;
     this.filter(this.filters, false, true);
   }
 
@@ -97,6 +95,18 @@ export class FilterComponent implements OnInit {
       .subscribe((results: string[]) => {
         this.categories = results;
         this.categories.unshift('all');
+      });
+  }
+
+  private getPriceRange() {
+    this.rangeSubscription = this.service
+      .getPriceRange(this.filters.category)
+      .subscribe((results: number[]) => {
+        this.options = {
+          floor: results[0],
+          ceil: results[1],
+          showTicks: false,
+        };
       });
   }
 

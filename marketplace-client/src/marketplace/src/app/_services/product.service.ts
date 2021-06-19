@@ -176,6 +176,10 @@ export class ProductService {
     return this.http.get<string[]>(`${baseUrl}/products/categories`);
   }
 
+  getPriceRange(category:string): Observable<number[]> {
+    return this.http.get<number[]>(`${baseUrl}/products/price-range/`+category);
+  }
+
   getFilter(): Filter {
     return new Filter(
       this.activatedRoute.snapshot.queryParamMap.get('category') || 'all',

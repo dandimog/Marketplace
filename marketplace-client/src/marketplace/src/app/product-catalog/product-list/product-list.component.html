@@ -6,7 +6,7 @@
           <div class="card">
             <div class="card-body">
                <app-search (results)="products = search.getProducts()" #search> </app-search>
-               <app-filter [sort]="sort"  [direction]="direction" (results)="products = filter.getProducts()"  #filter></app-filter>
+               <app-filter [(sort)]="sort"  [(direction)]="direction" (results)="products = filter.getProducts()"  #filter></app-filter>
             </div>
           </div>
         </div>
