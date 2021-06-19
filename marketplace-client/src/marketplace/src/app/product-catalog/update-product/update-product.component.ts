@@ -27,6 +27,9 @@ export class UpdateProductComponent implements OnInit{
   categoryName: string[]= ["fruits", "vegetables", "meat", "drinks", "water"];
   inStock: string[] = ["true", "false", "null"];
   unit: string[] = ["KILOGRAM", "ITEM", "LITRE"];
+  id: number = -1;
+
+  goodName: string|null = null;
 
   loading = false;
 
@@ -55,9 +58,12 @@ export class UpdateProductComponent implements OnInit{
     private formBuilder: FormBuilder,
     private accountService: ProductService,
     private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   formCreation(){
+    this.goodName = this.response.goodName;
+    this.id = this.response.id;
     this.form = this.formBuilder.group(
       {
         goodName: [this.response.goodName, Validators.required],
@@ -110,12 +116,12 @@ export class UpdateProductComponent implements OnInit{
     console.log(this.mapToProduct(this.form.value))
 
     observable.pipe(first()).subscribe({
-      next: () => {
+      next: (res) => {
         this.loading = false;
         this.updated = true;
+        this.router.navigateByUrl('/products/'+res.id)
       },
     });
   }
-
 
 }

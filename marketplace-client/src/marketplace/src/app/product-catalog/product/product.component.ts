@@ -22,7 +22,7 @@ export class ProductComponent implements OnInit {
     this.role = authService.getRole();
   }
 
-  product: Product = new Product(0, '', '', 0, 0, '', 0, false, '', '', '');
+  product: Product = new Product(-1, '', '', 0, 0, '', 0, false, '', '', '');
   comparison: boolean = false;
   role: string | null;
 

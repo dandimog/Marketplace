@@ -103,8 +103,8 @@ export class FilterComponent implements OnInit {
       .getPriceRange(this.filters.category)
       .subscribe((results: number[]) => {
         this.options = {
-          floor: results[0],
-          ceil: results[1],
+          floor: Math.floor(results[0]),
+          ceil: Math.ceil(results[1]),
           showTicks: false,
         };
       });
@@ -128,9 +128,5 @@ export class FilterComponent implements OnInit {
 
   isNameDesc(): boolean {
     return this.filters.sort === 'name' && this.filters.direction === 'DESC';
-  }
-
-  getMaxPrice(): number {
-    return Math.max.apply(Math, this.products.map(function(product) { return product.price; }));
   }
 }

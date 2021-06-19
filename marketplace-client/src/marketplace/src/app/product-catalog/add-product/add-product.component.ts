@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ProductService } from '../../_services/product.service';
-import { validateBirthday } from '../../_helpers/validators.service';
-import { first } from 'rxjs/operators';
-import { Role } from '../../_models/role';
-import { StaffMember } from '../../_models/staff-member';
-import { Product } from '../../_models/products/product';
+import {ProductService} from '../../_services/product.service';
+import {validateBirthday} from '../../_helpers/validators.service';
+import {first} from 'rxjs/operators';
+import {Role} from '../../_models/role';
+import {StaffMember} from '../../_models/staff-member';
+import {Product} from '../../_models/products/product';
 import {AccountService} from "../../_services/account.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-product',
@@ -28,7 +29,9 @@ export class AddProductComponent {
 
   unit: string[] = ["KILOGRAM", "ITEM", "LITRE"];
   inStockStatus: string[] = ["true", "false", "null"];
-  categoryName: string[]= ["fruits", "vegetables", "meat", "drinks", "water"];
+  categoryName: string[] = ["fruits", "vegetables", "meat", "drinks", "water"];
+
+  goodName: string = "New product";
 
   loading = false;
   registered = false;
@@ -37,9 +40,10 @@ export class AddProductComponent {
   constructor(
     private formBuilder: FormBuilder,
     private accountService: AccountService,
-     private productService: ProductService,
+    private productService: ProductService,
+    private router: Router
   ) {
-  this.form = this.formBuilder.group(
+    this.form = this.formBuilder.group(
       {
         goodName: ['', Validators.required],
         firmName: ['', Validators.required],
@@ -58,7 +62,7 @@ export class AddProductComponent {
     return this.form.controls;
   }
 
-  public setImage(imageName: string){
+  public setImage(imageName: string) {
     this.image = imageName;
   }
 
@@ -85,21 +89,20 @@ export class AddProductComponent {
       return;
     }
     this.loading = true;
-
-    let observable = null;
     let product = this.mapToProduct(this.form.value);
     product.image = this.image;
-    observable = this.productService.AddProduct(
-      product
-    );
-
-    observable.pipe(first()).subscribe({
-
-            next: () => {
-              console.log("Role mistake");
-        this.loading = false;
-        this.registered = true;
-      }
-    });
+    this.productService.AddProduct(product)
+      .pipe(first())
+      .subscribe({
+        next: (res) => {
+          console.log("Product added");
+          this.router.navigateByUrl('/products/' + res.id);
+          this.loading = false;
+          this.registered = true;
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      });
   }
 }

@@ -230,15 +230,15 @@ export class ProductService {
     return !str || /^\s*$/.test(str);
   }
 
-  AddProduct(account: Product): Observable<any> {
-    return this.http.post(`${baseUrl}/products`, account);
+  AddProduct(account: Product): Observable<Product> {
+    return this.http.post<Product>(`${baseUrl}/products`, account);
   }
 
   getProductInfo(id: number) {
     return this.http.get(`${baseUrl}/products/` + id);
   }
 
-  updateProduct(account: Product, id: number): Observable<any> {
-    return this.http.put(`${baseUrl}/products/` + id, account);
+  updateProduct(account: Product, id: number): Observable<Product> {
+    return this.http.put<Product>(`${baseUrl}/products/` + id, account);
   }
 }
