@@ -1,8 +1,10 @@
 package com.ncgroup.marketplaceserver.repository;
 
-import java.util.List;
+
 
 import com.ncgroup.marketplaceserver.model.User;
+
+import java.util.List;
 
 public interface UserRepository {
 	User findById(long id);
@@ -27,6 +29,8 @@ public interface UserRepository {
 	void updateAuthLink(String email, String link);
 
 	void updatePassword(String email, String password);
+
+	void updateUserByEmail(User user, String email);
 
 	List<User> allCouriersManagers();
 }
