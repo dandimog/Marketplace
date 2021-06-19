@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import {HttpClient, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {catchError, shareReplay, tap} from 'rxjs/operators';
 
@@ -63,7 +63,9 @@ export class AccountService {
   }
 
   resetPassword(email: string): Observable<any> {
-    return this.http.post(`${baseUrl}/reset-password`, email);
+    console.log(email);
+    const header = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post(`${baseUrl}/reset-password`, email, {headers:header});
   }
 
   setNewPassword(link: string, password: string): Observable<any> {

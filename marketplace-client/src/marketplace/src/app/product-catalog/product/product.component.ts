@@ -4,6 +4,7 @@ import { CartService } from 'src/app/_services/cart/cart.service';
 import { ProductService } from 'src/app/_services/product.service';
 import {LimitedProductComparisonService} from "../../_services/product-comparison/limited-product-comparison.service";
 import {ProductComparisonService} from "../../_services/product-comparison/product-comparison";
+import {AuthService} from "../../_auth/auth.service";
 
 @Component({
   selector: 'app-product',
@@ -13,13 +14,17 @@ import {ProductComparisonService} from "../../_services/product-comparison/produ
 export class ProductComponent implements OnInit {
   constructor(
     private service: ProductService,
+    private authService : AuthService,
     private cartService: CartService,
     @Inject(LimitedProductComparisonService)
     private comparisonService: ProductComparisonService,
-  ) {}
+  ) {
+    this.role = authService.getRole();
+  }
 
   product: Product = new Product(0, '', '', 0, 0, '', 0, false, '', '', '');
   comparison: boolean = false;
+  role: string | null;
 
   ngOnInit(): void {
     this.service.getProduct().subscribe((result: Product) => {

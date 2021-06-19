@@ -18,10 +18,6 @@
 
 .pers h4 {
   margin-bottom: 0px;
-  padding-bottom: 3px;
-  padding-top: 3px;
-  color: #495057;
-  font-size: 1rem;
 }
 
 .pers h3 {
@@ -29,8 +25,14 @@
   font-weight: bold;
 }
 
-.fa-edit {
-  color: #007dc3;
+.submit-btn {
+  color: #fff;
+  background-color: #007dc3;
+  font-size: 18px;
+}
+
+.submit-btn:hover {
+  box-shadow: 0 0 8pt 3pt #7fc5ee;
 }
 
 .logout-btn {
@@ -53,3 +55,6 @@
   cursor: default;
 }
 
+.fa-arrow-left {
+  margin-left: -40px;
+}
