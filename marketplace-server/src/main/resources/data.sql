@@ -62,3 +62,4 @@ INSERT INTO goods(prod_id, firm_id, price, unit, discount,
 (19, 1, 32, 'KILOGRAM', 9, null, true, true, null, 'We partnered with Artisan Meats in upstate New York to turn our FreshDirect pasture-raised heritage pork into high-quality sausages. Smoked and packed with flavorful New York cheddar, this delicious, fully-cooked pork sausage is seasoned with onion, garlic, marjoram, and a touch of spicy jalapeño.', 148),
 (20, 1, 32, 'KILOGRAM', 9, null, true, true, null, 'If grilling is your thing, this succulent slab was born to barbecue. We''ve removed the breastbone, making for uniform ribs. That makes them much easier to handle on the grill. Rub with a combination of salt, pepper, sugar, chili powder, paprika, and cumin. Then grill them slowly over indirect heat.', 148);
 
+

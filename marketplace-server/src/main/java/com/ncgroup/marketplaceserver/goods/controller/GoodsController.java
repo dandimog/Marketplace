@@ -5,6 +5,7 @@ import com.ncgroup.marketplaceserver.goods.model.Good;
 import com.ncgroup.marketplaceserver.goods.model.GoodDto;
 import com.ncgroup.marketplaceserver.goods.service.GoodsService;
 import com.ncgroup.marketplaceserver.exception.basic.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/products")
 public class GoodsController {
@@ -71,6 +73,11 @@ public class GoodsController {
     @GetMapping("/categories")
     public ResponseEntity<List<String>> getCategories() throws NotFoundException {
         return new ResponseEntity<>(service.getCategories(), HttpStatus.OK);
+    }
+
+    @GetMapping("/price-range/{category}")
+    public ResponseEntity<List<Double>> getPriceRange( @PathVariable("category") String category) throws NotFoundException {
+        return new ResponseEntity<>(service.getPriceRange(category), HttpStatus.OK);
     }
 
     @GetMapping("/firms")
