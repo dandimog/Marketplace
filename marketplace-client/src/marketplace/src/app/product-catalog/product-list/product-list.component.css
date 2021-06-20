@@ -21,6 +21,7 @@
   float: right;
   margin-right: 15px;
   margin-top: 12px;
+  font-size: 18px;
 }
 
 .ascending-btn {
@@ -40,7 +41,6 @@
 .btn-add {
   background-color: #007dc3;
   color: #FFFFFF;
-  float: right;
   margin-top: 20px;
   font-size: 15px;
   height: 40px;

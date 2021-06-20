@@ -19,6 +19,8 @@ import { SystemAccountService } from 'src/app/_services/system-account.service';
 export class FilterComponent implements OnInit, OnDestroy {
   activeRadioButton = '';
   users: StaffMember[] = [];
+  type: string = 'all';
+  typeList: string[] = ['all', 'manager', 'courier'];
   subscription!: Subscription;
   @Input() statusList: string[] = [];
   @Output() results: EventEmitter<any> = new EventEmitter<any>();
@@ -57,5 +59,9 @@ export class FilterComponent implements OnInit, OnDestroy {
 
   getUsers(): StaffMember[] {
     return this.users;
+  }
+
+  setType(type: string): void {
+    this.type = type;
   }
 }
