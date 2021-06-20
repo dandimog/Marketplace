@@ -7,19 +7,17 @@ import {AuthService} from "../../_auth/auth.service";
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css'],
 })
-export class ProductListComponent {
+export class ProductListComponent implements OnInit{
   @Input() products: Product[] = [];
   direction: string = "ASC";
   sort: string = "name";
-  role: string | null;
+  role: string | null = null;
 
   constructor(private authService: AuthService) {
-    this.role = authService.getRole();
-  }
 
+  }
   ngOnInit(){
-    this.direction = "ASC";
-    this.sort="name";
+    this.role = this.authService.getRole();
   }
 
   setDirection():void{

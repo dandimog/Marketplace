@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChange} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Filter } from 'src/app/_models/products/filter';
 import { Product } from 'src/app/_models/products/product';
@@ -21,20 +21,22 @@ export class FilterComponent implements OnInit {
   rangeSubscription!: Subscription;
   minPrice: number = 0;
   maxPrice: number = 99999;
+  init: boolean = false;
   options: Options = {
     floor: 0,
     ceil: 99999,
     showTicks: false,
   };
-  @Input() sort: string | null = null;
+  @Input() sort: string = "name";
   @Output() sortChange = new EventEmitter<string>();
-  @Input() direction: string | null = null;
+  @Input() direction: string = "ASC";
   @Output() directionChange = new EventEmitter<string>();
   @Output() results: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private service: ProductService) {}
 
   ngOnInit(): void {
+    this.init = true;
     this.getCategories();
     this.filters = this.getFilter();
     this.sort=this.filters.sort;
@@ -53,10 +55,10 @@ export class FilterComponent implements OnInit {
     this.rangeSubscription.unsubscribe();
   }
 
-  ngOnChanges():void{
-    if(this.filters) {
-      if(this.sort) this.filters.sort = this.sort;
-      if(this.direction) this.filters.direction = this.direction;
+  ngOnChanges(changes: { [property: string]: SimpleChange }){
+    if(this.init) {
+      this.filters.sort = this.sort;
+      this.filters.direction = this.direction;
       this.filter(this.filters, false);
     }
   }
