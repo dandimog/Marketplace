@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AccountService} from '../../_services/account.service';
 import {first} from 'rxjs/operators';
-import {ActivatedRoute, Router} from '@angular/router';
 import {validateBirthday, validateConfirmPassword, validatePassword} from '../../_helpers/validators.service';
 
 @Component({
@@ -12,10 +11,9 @@ import {validateBirthday, validateConfirmPassword, validatePassword} from '../..
 
 export class RegisterComponent {
 
-  form: FormGroup;
+  form!: FormGroup;
   submitted = false;
 
-  // icons
   loading = false;
   showPassword = false;
   showConfirmPassword = false;
@@ -25,6 +23,10 @@ export class RegisterComponent {
     private formBuilder: FormBuilder,
     private accountService: AccountService,
   ) {
+    this.buildForm();
+  }
+
+  buildForm(): void {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
       surname: ['', Validators.required],
@@ -44,10 +46,10 @@ export class RegisterComponent {
 
   onSubmit(): void {
     this.submitted = true;
-    this.form.disable();
     if (this.form.invalid) {
       return;
     }
+    this.form.disable();
     this.loading = true;
     this.accountService.register(this.form.value)
       .pipe(first())

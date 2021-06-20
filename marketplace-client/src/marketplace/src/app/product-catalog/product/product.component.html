@@ -4,7 +4,7 @@
       <div class="card">
         <div class="product-card card-body m-4">
           <div class="row d-flex h-100">
-            <img *ngIf="product.discount && (role=='ROLE_USER' || !role)" src="assets/sale.svg" class="sale-icon">
+            <img *ngIf="product.discount!=0 && (role=='ROLE_USER' || !role)" src="assets/sale.svg" class="sale-icon">
             <img *ngIf="product.image" class="card-img col-12 col-md-4 mr-5"
                  alt="Product">
             <img *ngIf="!product.image" src="assets/product.svg" class="col-12 col-md-4 mr-5">
@@ -17,9 +17,9 @@
               <p class="card-text">{{product.description}}</p>
               <div class="price">
                 <div class="price-div">
-                <span *ngIf="product.discount" class="mt-3 old-price"> {{product.price}}$</span>
-                <h4 *ngIf="product.discount" class="new-price"> {{(product.price*(100-product.discount)/100).toFixed(2)}}$</h4>
-                <h4 *ngIf="!product.discount" class="mt-4">{{product.price}}$</h4>
+                <span *ngIf="product.discount!=0" class="mt-3 old-price"> {{product.price}}$</span>
+                <h4 *ngIf="product.discount!=0" class="new-price"> {{(product.price*(100-product.discount)/100).toFixed(2)}}$</h4>
+                <h4 *ngIf="product.discount==0" class="mt-4">{{product.price}}$</h4>
                 </div>
                 <span>/{{product.unit}}</span>
               </div>

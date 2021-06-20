@@ -88,6 +88,7 @@ export class AddProductComponent {
     if (this.form.invalid) {
       return;
     }
+    this.form.disable();
     this.loading = true;
     let product = this.mapToProduct(this.form.value);
     product.image = this.image;
@@ -102,6 +103,7 @@ export class AddProductComponent {
         },
         error: (error) => {
           console.log(error);
+          this.form.enable();
         }
       });
   }

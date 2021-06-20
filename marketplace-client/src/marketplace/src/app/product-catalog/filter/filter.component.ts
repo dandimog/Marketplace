@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Filter } from 'src/app/_models/products/filter';
 import { Product } from 'src/app/_models/products/product';
@@ -26,13 +26,14 @@ export class FilterComponent implements OnInit {
     ceil: 99999,
     showTicks: false,
   };
-  @Input() sort: string = "name";
+  @Input() sort: string | null = null;
   @Output() sortChange = new EventEmitter<string>();
-  @Input() direction: string = "ASC";
+  @Input() direction: string | null = null;
   @Output() directionChange = new EventEmitter<string>();
   @Output() results: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(private service: ProductService) {}
+  constructor(private service: ProductService,
+              private cdref: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.getCategories();
@@ -55,8 +56,8 @@ export class FilterComponent implements OnInit {
 
   ngOnChanges():void{
     if(this.filters) {
-      this.filters.sort = this.sort;
-      this.filters.direction = this.direction;
+      if(this.sort) this.filters.sort = this.sort;
+      if(this.direction) this.filters.direction = this.direction;
       this.filter(this.filters, false);
     }
   }

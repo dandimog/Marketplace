@@ -104,6 +104,7 @@ export class UpdateProductComponent implements OnInit{
     if (this.form.invalid) {
       return;
     }
+    this.form.disable();
     this.loading = true;
     let observable = null;
 
@@ -119,8 +120,12 @@ export class UpdateProductComponent implements OnInit{
       next: (res) => {
         this.loading = false;
         this.updated = true;
-        this.router.navigateByUrl('/products/'+res.id)
+        this.router.navigateByUrl('/products/'+res.id);
       },
+      error: (err) => {
+        console.log(err);
+        this.form.enable();
+      }
     });
   }
 

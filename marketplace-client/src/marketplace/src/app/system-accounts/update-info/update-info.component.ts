@@ -112,6 +112,7 @@ export class UpdateInfoComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
+    this.form.disable();
     this.loading = true;
     let observable = null;
     if (this.route.snapshot.params.role.localeCompare(1)) {
@@ -126,6 +127,7 @@ export class UpdateInfoComponent implements OnInit {
       );
     } else {
       console.log('Role mistake');
+      this.form.enable();
       return;
     }
 
@@ -135,6 +137,7 @@ export class UpdateInfoComponent implements OnInit {
       next: () => {
         this.loading = false;
         this.updated = true;
+        this.form.enable();
       },
     });
   }
