@@ -6,6 +6,8 @@ import { Product } from '../../_models/products/product';
 
 import {first} from "rxjs/operators";
 import {Observable, Subscription} from "rxjs";
+import {AlertType} from "../../_models/alert";
+import {AlertService} from "../../_services/alert.service";
 
 @Component({
   selector: 'update-product',
@@ -76,7 +78,8 @@ export class UpdateProductComponent implements OnInit{
     private formBuilder: FormBuilder,
     private accountService: ProductService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private alertService: AlertService
   ) {}
 
   formCreation(){
@@ -89,7 +92,7 @@ export class UpdateProductComponent implements OnInit{
         quantity: [this.response.quantity, [Validators.min(1), Validators.required]],
         price: [this.response.price, [Validators.min(1), Validators.required]],
         unit: [this.response.unit, Validators.required],
-        discount: [this.response.discount, [Validators.min(1), Validators.required]],
+        discount: [this.response.discount, Validators.min(0)],
         inStock: [String(this.response.inStock), Validators.required],
         status: [String(this.response.status), Validators.required],
         categoryName: [this.response.categoryName, Validators.required],
@@ -140,6 +143,7 @@ export class UpdateProductComponent implements OnInit{
         this.loading = false;
         this.updated = true;
         this.router.navigateByUrl('/products/'+res.id);
+        this.alertService.addAlert("Product was successfully updated!", AlertType.Success);
       },
       error: (err) => {
         console.log(err);

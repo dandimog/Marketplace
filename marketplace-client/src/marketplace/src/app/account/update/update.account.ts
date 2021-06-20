@@ -4,6 +4,8 @@ import { User } from "src/app/_models/user";
 import { AccountService } from "src/app/_services/account.service";
 import {Router} from "@angular/router";
 import {first} from "rxjs/operators";
+import {AlertType} from "../../_models/alert";
+import {AlertService} from "../../_services/alert.service";
 
 @Component({
   templateUrl: './update.account.html',
@@ -22,7 +24,8 @@ export class UpdateAccount implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private accountService: AccountService,
-              private router: Router) {
+              private router: Router,
+              private alertService: AlertService) {
     this.updateForm = this.formBuilder.group({
       name: [''],
       surname: [''],
@@ -57,9 +60,11 @@ export class UpdateAccount implements OnInit {
       next: () => {
         this.router.navigate(['/accounts/profile']);
         console.log("Profile updated");
+        this.alertService.addAlert("Profile was successfully updated!", AlertType.Success);
       },
       error: error => {
         console.log("Error has occurred during updating profile");
+        this.alertService.addAlert("Error has occurred during updating", AlertType.Danger);
       }
     });
   }

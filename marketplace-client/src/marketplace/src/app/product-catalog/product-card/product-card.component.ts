@@ -10,7 +10,7 @@ import {CartService} from "../../_services/cart/cart.service";
 })
 export class ProductCardComponent {
 
-  @Input() product: Product = new Product(0, '', '', 0, 0, '', 0, false, '', '', '');
+  @Input() product: Product = new Product(0, '', '', 0, 0, '', 0, false, false, '', '', '', '');
   @Input() role: string | null = null;
 
   constructor(private cartService: CartService) {

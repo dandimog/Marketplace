@@ -20,7 +20,7 @@ export class ProductComponent implements OnInit {
     private comparisonService: ProductComparisonService,
   ) {}
 
-  product: Product = new Product(-1, '', '', 0, 0, '', 0, false, '', '', '');
+  product: Product = new Product(-1, '', '', 0, 0, '', 0, false, false, '', '', '', '');
   comparison: boolean = false;
   role: string | null = "ROLE_USER";
 
@@ -28,7 +28,7 @@ export class ProductComponent implements OnInit {
     this.service.getProduct().subscribe((result: Product) => {
       this.product = result;
       this.comparison = this.inComparison();
-      this.role = authService.getRole();
+      this.role = this.authService.getRole();
     });
   }
 

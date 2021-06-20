@@ -1,20 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, Validators,} from '@angular/forms';
 import {ProductService} from '../../_services/product.service';
-import {validateBirthday} from '../../_helpers/validators.service';
 import {first} from 'rxjs/operators';
-import {Role} from '../../_models/role';
-import {StaffMember} from '../../_models/staff-member';
 import {Product} from '../../_models/products/product';
 import {AccountService} from "../../_services/account.service";
 import {Router} from "@angular/router";
-import {formatDate} from '@angular/common';
 import {Subscription} from "rxjs";
+import {AlertService} from "../../_services/alert.service";
+import {AlertType} from "../../_models/alert";
 
 @Component({
   selector: 'app-product',
@@ -50,7 +43,8 @@ export class AddProductComponent implements OnInit{
     private formBuilder: FormBuilder,
     private accountService: AccountService,
     private productService: ProductService,
-    private router: Router
+    private router: Router,
+    private alertService: AlertService
   ) {
     this.form = this.formBuilder.group(
       {
@@ -87,7 +81,7 @@ export class AddProductComponent implements OnInit{
   }
 
   public category(){
-    this.subscriptions.add(this.accountService.getCategories()
+    this.subscriptions.add(this.productService.getCategories()
       .subscribe((categ) =>{
         this.responseCategory = categ;
         this.categoryName = this.responseCategory;
@@ -95,7 +89,7 @@ export class AddProductComponent implements OnInit{
   }
 
   public firm(){
-    this.subscriptions.add(this.accountService.getFirm()
+    this.subscriptions.add(this.productService.getFirm()
       .subscribe((firm) =>{
         this.responseFirm = firm;
         this.firmName = this.responseFirm;
@@ -138,10 +132,13 @@ export class AddProductComponent implements OnInit{
           this.router.navigateByUrl('/products/' + res.id);
           this.loading = false;
           this.registered = true;
+          this.alertService.addAlert("Product was successfully added!", AlertType.Success);
         },
         error: (error) => {
           console.log(error);
           this.form.enable();
+          this.loading = false;
+          this.alertService.addAlert("Error has occurred during creation", AlertType.Danger);
         }
       });
   }

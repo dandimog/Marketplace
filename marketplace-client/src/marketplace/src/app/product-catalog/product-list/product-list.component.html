@@ -13,7 +13,7 @@
         <div class="col mb-3">
           <div class="e-panel card">
             <div class="row d-flex flex-sm-row justify-content-between">
-            <button routerLink="/products/add-product" class="btn btn-default btn-add" *ngIf="role=='ROLE_ADMIN' || role=='ROLE_PRODUCT_MANAGER'">
+            <button routerLink="/products/add" class="btn btn-default btn-add" *ngIf="role=='ROLE_ADMIN' || role=='ROLE_PRODUCT_MANAGER'">
               + Add product</button>
             <div class="dropdown self-align-right">
               <button (click)="setDirection()" class="ascending-btn default-btn">

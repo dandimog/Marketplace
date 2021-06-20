@@ -32,8 +32,7 @@ export class FilterComponent implements OnInit {
   @Output() directionChange = new EventEmitter<string>();
   @Output() results: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(private service: ProductService,
-              private cdref: ChangeDetectorRef) {}
+  constructor(private service: ProductService) {}
 
   ngOnInit(): void {
     this.getCategories();

@@ -234,15 +234,16 @@ export class ProductService {
     return !str || /^\s*$/.test(str);
   }
 
-  AddProduct(account: Product): Observable<Product> {
-    return this.http.post<Product>(`${baseUrl}/products`, account);
+  AddProduct(product: Product): Observable<Product> {
+    console.log(product);
+    return this.http.post<Product>(`${baseUrl}/products`, product);
   }
 
   getProductInfo(id: number) {
     return this.http.get(`${baseUrl}/products/` + id);
   }
 
-  updateProduct(account: Product, id: number): Observable<Product> {
-    return this.http.put<Product>(`${baseUrl}/products/` + id, account);
+  updateProduct(product: Product, id: number): Observable<Product> {
+    return this.http.put<Product>(`${baseUrl}/products/` + id, product);
   }
 }

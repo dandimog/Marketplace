@@ -24,7 +24,7 @@ public class GoodDto {
     @Min(0)
     private double price;
     private Unit unit;
-    @Min(1)
+    @Min(0)
     @Max(99)
     private double discount;
 
