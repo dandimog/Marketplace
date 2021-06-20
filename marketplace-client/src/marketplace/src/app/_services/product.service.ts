@@ -179,6 +179,10 @@ export class ProductService {
     return this.http.get<number[]>(`${baseUrl}/products/price-range/`+category);
   }
 
+  getFirm(): Observable<string[]> {
+    return this.http.get<string[]>(`${baseUrl}/products/firms`);
+  }
+
   getFilter(): Filter {
     const MAX_RPICE = 400;
     const MIN_PRICE = 0;

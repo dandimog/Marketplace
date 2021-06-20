@@ -92,6 +92,8 @@ public class GoodsRepoImpl implements GoodsRepository {
 
     @Value("${product.insert}")
     private String productInsert;
+    @Value("${product.edit-category}")
+    private String editProductCategory;
     public Long createProduct(String goodName, Long categoryId) {
         Optional<Long> productId = findByName
                 (goodName, "productName", findProductByName);
@@ -102,7 +104,12 @@ public class GoodsRepoImpl implements GoodsRepository {
                     .addValue("categoryId", categoryId);
             namedParameterJdbcTemplate.update(productInsert, productParameters, productHolder);
             productId = Optional.of(productHolder.getKey().longValue());
+            return productId.get();
         }
+        SqlParameterSource categoryParameters = new MapSqlParameterSource()
+                .addValue("categoryId", categoryId)
+                .addValue("id", productId.get());
+        namedParameterJdbcTemplate.update(editProductCategory, categoryParameters);
         return productId.get();
     }
 

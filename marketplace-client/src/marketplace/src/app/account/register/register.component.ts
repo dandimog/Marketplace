@@ -1,14 +1,23 @@
 import { Component } from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AccountService} from '../../_services/account.service';
-import {first} from 'rxjs/operators';
-import {validateBirthday, validateConfirmPassword, validatePassword} from '../../_helpers/validators.service';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { AccountService } from '../../_services/account.service';
+import { first } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  validateBirthday,
+  validateConfirmPassword,
+  validatePassword,
+} from '../../_helpers/validators.service';
 
 @Component({
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: ['./register.component.css'],
 })
-
 export class RegisterComponent {
 
   form!: FormGroup;
@@ -21,28 +30,43 @@ export class RegisterComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private accountService: AccountService,
+    private accountService: AccountService
   ) {
     this.buildForm();
   }
 
   buildForm(): void {
-    this.form = this.formBuilder.group({
-      name: ['', Validators.required],
-      surname: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', Validators.pattern(/\+380[0-9]{9}/)],
-      birthday: [''],
-      password: ['', [Validators.required, Validators.minLength(6),
-        Validators.maxLength(32)]],
-      confirmPassword: ['', Validators.required],
-      acceptTerms: [false, Validators.requiredTrue]
-    }, {
-      validator: [validateConfirmPassword, validatePassword, validateBirthday]
-    });
+    this.form = this.formBuilder.group(
+      {
+        name: ['', Validators.required],
+        surname: ['', Validators.required],
+        email: ['', [Validators.required, Validators.email]],
+        phone: ['', Validators.pattern(/\+380[0-9]{9}/)],
+        birthday: ['', Validators.required],
+        password: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(6),
+            Validators.maxLength(32),
+          ],
+        ],
+        confirmPassword: ['', Validators.required],
+        acceptTerms: [false, Validators.requiredTrue],
+      },
+      {
+        validator: [
+          validateConfirmPassword,
+          validatePassword,
+          validateBirthday,
+        ],
+      }
+    );
   }
 
-  get getForm(): { [p: string]: AbstractControl } { return this.form.controls; }
+  get getForm(): { [p: string]: AbstractControl } {
+    return this.form.controls;
+  }
 
   onSubmit(): void {
     this.submitted = true;
@@ -51,7 +75,8 @@ export class RegisterComponent {
     }
     this.form.disable();
     this.loading = true;
-    this.accountService.register(this.form.value)
+    this.accountService
+      .register(this.form.value)
       .pipe(first())
       .subscribe({
         next: () => {
@@ -59,13 +84,13 @@ export class RegisterComponent {
           this.form.enable();
           this.registered = true;
         },
-        error: error => {
-          if (error.error.message === 'Email  already exists'){
-            this.getForm.email.setErrors({EmailAlreadyExists : true});
+        error: (error) => {
+          if (error.error.message === 'Email  already exists') {
+            this.getForm.email.setErrors({ EmailAlreadyExists: true });
           }
           this.loading = false;
           this.form.enable();
-        }
+        },
       });
   }
 
@@ -76,5 +101,4 @@ export class RegisterComponent {
   showHideConfirmPassword(): void {
     this.showConfirmPassword = !this.showConfirmPassword;
   }
-
 }

@@ -1,8 +1,6 @@
 import {  Component, Input, OnInit } from '@angular/core';
 import { Product } from 'src/app/_models/products/product';
-import {Account} from "../../_models/account";
 import {AuthService} from "../../_auth/auth.service";
-import {Role} from "../../_models/role";
 
 @Component({
   selector: 'app-product-list',

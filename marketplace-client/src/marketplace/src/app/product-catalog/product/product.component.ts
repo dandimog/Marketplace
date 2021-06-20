@@ -18,18 +18,17 @@ export class ProductComponent implements OnInit {
     private cartService: CartService,
     @Inject(LimitedProductComparisonService)
     private comparisonService: ProductComparisonService,
-  ) {
-    this.role = authService.getRole();
-  }
+  ) {}
 
   product: Product = new Product(-1, '', '', 0, 0, '', 0, false, '', '', '');
   comparison: boolean = false;
-  role: string | null;
+  role: string | null = "ROLE_USER";
 
   ngOnInit(): void {
     this.service.getProduct().subscribe((result: Product) => {
       this.product = result;
       this.comparison = this.inComparison();
+      this.role = authService.getRole();
     });
   }
 

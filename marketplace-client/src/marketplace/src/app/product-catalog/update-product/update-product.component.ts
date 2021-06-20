@@ -1,14 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {Role} from "../../_models/role";
-import {SystemAccountService} from "../../_services/system-account.service";
 import {ProductService} from "../../_services/product.service";
-import {validateBirthday} from "../../_helpers/validators.service";
-import {StaffMember} from "../../_models/staff-member";
 import { Product } from '../../_models/products/product';
 
 import {first} from "rxjs/operators";
+import {Observable, Subscription} from "rxjs";
 
 @Component({
   selector: 'update-product',
@@ -22,36 +19,57 @@ export class UpdateProductComponent implements OnInit{
   form = new FormGroup({
     name: new FormControl('')
   });
-  submitted = false;
 
-  categoryName: string[]= ["fruits", "vegetables", "meat", "drinks", "water"];
-  inStock: string[] = ["true", "false", "null"];
+  subscriptions: Subscription = new Subscription();
+
+  categoryName: string[]= [""];
+  firmName: string[]=[""];
   unit: string[] = ["KILOGRAM", "ITEM", "LITRE"];
   id: number = -1;
 
   goodName: string|null = null;
+  status: string[] = ["true", "false"];
 
+  submitted = false;
   loading = false;
-
   updated = false;
 
   response: any;
-
+  responseCategory: any;
+  responseFirm: any;
   image: string = '';
 
   ngOnInit(){
-    //.subscribe((response) => {
-      this.accountService.getProductInfo(this.route.snapshot.params.id)
-        .subscribe((response) => {
-          this.response = response;
-          console.log(this.response);
-          this.formCreation();
-        })
-
+    this.subscriptions.add(this.accountService.getProductInfo(this.route.snapshot.params.id)
+      .subscribe((response) => {
+        this.response = response;
+        this.formCreation();
+        this.firm()
+        this.category();
+      }));
+  }
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   public setImage(imageName: string){
     this.image = imageName;
+  }
+
+  private category(){
+    this.subscriptions.add( this.accountService.getCategories()
+      .subscribe((categ) =>{
+        this.responseCategory = categ;
+        this.categoryName = this.responseCategory;
+      }));
+  }
+
+  private firm(){
+    this.subscriptions.add( this.accountService.getFirm()
+      .subscribe((firm) =>{
+        this.responseFirm = firm;
+        this.firmName = this.responseFirm;
+      }));
   }
 
   constructor(
@@ -73,6 +91,7 @@ export class UpdateProductComponent implements OnInit{
         unit: [this.response.unit, Validators.required],
         discount: [this.response.discount, [Validators.min(1), Validators.required]],
         inStock: [String(this.response.inStock), Validators.required],
+        status: [String(this.response.status), Validators.required],
         categoryName: [this.response.categoryName, Validators.required],
         description: [this.response.description, Validators.required],
       },
@@ -85,15 +104,17 @@ export class UpdateProductComponent implements OnInit{
 
   private mapToProduct(o: any): Product {
     return {
-      id: -1,
+      id: this.response.id,
       goodName: o.goodName,
       firmName: o.firmName,
       quantity: o.quantity,
       price: o.price,
       unit: o.unit,
+      status: o.status,
       image: o.image,
       discount: o.discount,
       inStock: o.inStock,
+      shippingDate: this.response.shippingDate,
       categoryName: o.categoryName,
       description: o.description,
     };
@@ -111,10 +132,8 @@ export class UpdateProductComponent implements OnInit{
     let product = this.mapToProduct(this.form.value);
     product.image = this.image;
     observable = this.accountService.updateProduct(
-        product, (this.route.snapshot.params.id)
-      );
-
-    console.log(this.mapToProduct(this.form.value))
+      product, (this.route.snapshot.params.id)
+    );
 
     observable.pipe(first()).subscribe({
       next: (res) => {

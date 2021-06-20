@@ -11,17 +11,24 @@
                 <div class="form-row">
                   <div class="form-group col-6">
                     <label>Product Name<span>*</span></label>
-                    <input type="text" formControlName="goodName" class="form-control" [(ngModel)]="goodName"
+                    <input type="text" formControlName="goodName" class="form-control"
                            [ngClass]="{ 'is-invalid': submitted && getForm.goodName.errors }" />
                     <div *ngIf="submitted && getForm.goodName.errors" class="invalid-feedback">
-                      <div *ngIf="getForm.goodName.errors.required">Firm name is required</div>
+                      <div *ngIf="getForm.goodName.errors.required">Good name is required</div>
                     </div>
                   </div>
 
                   <div class="form-group col-6">
                     <label>Firm Name<span>*</span></label>
-                    <input type="text" formControlName="firmName" class="form-control"
-                           [ngClass]="{ 'is-invalid': submitted && getForm.firmName.errors }" />
+                    <input type="text" list="firms" class="form-control" formControlName="firmName"
+                           [ngClass]="{ 'is-invalid': submitted && getForm.firmName.errors }"/>
+                    <datalist id="firms">
+                      <ng-container >
+                        <option *ngFor="let firm of firmName" [ngValue]="firm">
+                          {{firm}}
+                        </option>
+                      </ng-container>
+                    </datalist>
                     <div *ngIf="submitted && getForm.firmName.errors" class="invalid-feedback">
                       <div *ngIf="getForm.firmName.errors.required">Firm name is required</div>
                     </div>
@@ -33,7 +40,7 @@
 
                   <div class="form-group col-6">
                     <label>Quantity<span>*</span></label>
-                    <input type="number" formControlName="quantity" class="form-control"
+                    <input type="number" formControlName="quantity" class="form-control" min="0"
                            [ngClass]="{ 'is-invalid': submitted && getForm.quantity.errors }" />
                     <div *ngIf="submitted && getForm.quantity.errors" class="invalid-feedback">
                       <div *ngIf="getForm.quantity.errors.required">Quantity is required</div>
@@ -43,56 +50,89 @@
 
                   <div class="form-group col-6">
                     <label>Unit<span>*</span></label>
-                    <select class="form-control unit-select" formControlName="unit">
+                    <select class="form-control unit-select" formControlName="unit" [ngClass]="{ 'is-invalid': submitted && getForm.unit.errors }">
                       <ng-container>
                         <option *ngFor="let status of unit" [ngValue]="status" class="unit-option">
                           {{status}}
                         </option>
                       </ng-container>
                     </select>
+                    <div *ngIf="submitted && getForm.unit.errors" class="invalid-feedback">
+                      <div *ngIf="getForm.unit.errors.required">Unit is required</div>
+                    </div>
                   </div>
 
                   <div class="form-group col-6">
                     <label>Price<span>*</span></label>
-                    <input type="number" formControlName="price" class="form-control"
+                    <input type="number" formControlName="price" class="form-control" min="0"
                            [ngClass]="{ 'is-invalid': submitted && getForm.price.errors }" />
                     <div *ngIf="submitted && getForm.price.errors" class="invalid-feedback">
-                      <div *ngIf="getForm.price.errors.required">Quantity is required</div>
+                      <div *ngIf="getForm.price.errors.required">Price is required</div>
                       <div *ngIf="getForm.price.errors.min">Price should be >0</div>
                     </div>
                   </div>
 
                   <div class="form-group col-6">
                     <label>Discount</label>
-                    <input type="number" formControlName="discount" class="form-control"
+                    <input type="number" formControlName="discount" class="form-control" min="0"
                            [ngClass]="{ 'is-invalid': submitted && getForm.discount.errors }" />
                     <div *ngIf="submitted && getForm.discount.errors" class="invalid-feedback">
-                      <div *ngIf="getForm.discount.errors.required">Price is required</div>
-                      <div *ngIf="getForm.discount.errors.min(0)">Discount should be > 0 </div>
+                      <div *ngIf="getForm.discount.errors.min">Discount should be > 0 </div>
                     </div>
                   </div>
 
                   <div class="form-group col-6">
                     <label>In Stock</label>
-                    <select class="form-control" formControlName="inStock">
-                      <ng-container>
-                        <option *ngFor="let status of inStockStatus" [ngValue]="status">
-                          {{status}}
-                        </option>
+                    <select class="form-control" formControlName="inStock" [ngClass]="{ 'is-invalid': submitted && getForm.inStock.errors }">
+                      <ng-container >
+                        <option [ngValue]="true">In stock</option>
+                        <option [ngValue]="false" >Not available</option>
                       </ng-container>
                     </select>
+                    <div *ngIf="submitted && getForm.inStock.errors" class="invalid-feedback">
+                      <div *ngIf="getForm.inStock.errors.required">In Stock is required</div>
+                    </div>
                   </div>
 
                   <div class="form-group col-6">
                     <label>Category<span>*</span></label>
-                    <select class="form-control" formControlName="categoryName">
-                      <ng-container >
+                    <input type="text" list="cars" class="form-control" formControlName="categoryName"
+                           [ngClass]="{ 'is-invalid': submitted && getForm.categoryName.errors }"/>
+                    <datalist id="cars">
+                      <ng-container>
                         <option *ngFor="let status of categoryName" [ngValue]="status">
                           {{status}}
                         </option>
                       </ng-container>
-                    </select>
+                    </datalist>
+                    <div *ngIf="submitted && getForm.categoryName.errors" class="invalid-feedback">
+                      <div *ngIf="getForm.categoryName.errors.required">Category name is required</div>
+                    </div>
                   </div>
+
+                  <div class="form-group col-6" >
+                    <label>Active</label>
+                    <select class="form-control" id="status" formControlName="status"
+                            [ngClass]="{ 'is-invalid': submitted && getForm.status.errors }">>
+                      <ng-container>
+                        <option Value="true" >Active</option>
+                        <option Value="false" selected="selected" >Not Active</option>
+                      </ng-container>
+                    </select>
+                    <div *ngIf="submitted && getForm.status.errors" class="invalid-feedback">
+                      <div *ngIf="getForm.status.errors.required">Status is required</div>
+                    </div>
+                  </div>
+
+                  <div class="form-group col-6">
+                    <label>Shipping date</label>
+                    <input type="datetime-local" formControlName="shippingDate" class="form-control"  min="{{d}}" max="3018-07-14T00:00"
+                           [ngClass]="{ 'is-invalid': submitted && getForm.shippingDate.errors }" />
+                    <div *ngIf="submitted && getForm.shippingDate.errors" class="invalid-feedback">
+                      <div *ngIf="getForm.shippingDate.hasError('InvalidDate')">Invalid date</div>
+                    </div>
+                  </div>
+
                   <div class="form-group col-12">
                     <label>Description</label>
                     <textarea rows= "3" type="text" formControlName="description" class="form-control"
