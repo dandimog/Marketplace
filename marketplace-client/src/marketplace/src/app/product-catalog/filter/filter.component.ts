@@ -1,4 +1,12 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChange} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  SimpleChange,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Filter } from 'src/app/_models/products/filter';
 import { Product } from 'src/app/_models/products/product';
@@ -39,12 +47,12 @@ export class FilterComponent implements OnInit {
     this.init = true;
     this.getCategories();
     this.filters = this.getFilter();
-    this.sort=this.filters.sort;
-    this.direction=this.filters.direction;
+    this.sort = this.filters.sort;
+    this.direction = this.filters.direction;
     this.sortChange.emit(this.sort);
     this.directionChange.emit(this.direction);
-    this.minPrice=this.filters.minPrice;
-    this.maxPrice=this.filters.maxPrice;
+    this.minPrice = this.filters.minPrice;
+    this.maxPrice = this.filters.maxPrice;
     this.getPriceRange();
     this.filter(this.filters, true);
   }
@@ -55,8 +63,8 @@ export class FilterComponent implements OnInit {
     this.rangeSubscription.unsubscribe();
   }
 
-  ngOnChanges(changes: { [property: string]: SimpleChange }){
-    if(this.init) {
+  ngOnChanges(changes: { [property: string]: SimpleChange }) {
+    if (this.init) {
       this.filters.sort = this.sort;
       this.filters.direction = this.direction;
       this.filter(this.filters, false);
@@ -67,7 +75,7 @@ export class FilterComponent implements OnInit {
     this.subscription = this.service
       .getFilteredProducts(filter, init)
       .subscribe((results: ProductDto) => {
-        if(category){
+        if (category) {
           this.getPriceRange();
         }
         this.products = results.result_set;
@@ -76,7 +84,6 @@ export class FilterComponent implements OnInit {
   }
 
   chooseCategory(category: string) {
-    console.log(category);
     this.filters.category = category;
     this.filter(this.filters, false, true);
   }
@@ -116,7 +123,7 @@ export class FilterComponent implements OnInit {
     return this.products;
   }
 
-  isPriceAsc(): boolean {
+  /*isPriceAsc(): boolean {
     return this.filters.sort === 'price' && this.filters.direction === 'ASC';
   }
 
@@ -130,5 +137,9 @@ export class FilterComponent implements OnInit {
 
   isNameDesc(): boolean {
     return this.filters.sort === 'name' && this.filters.direction === 'DESC';
+<<<<<<< HEAD
   }
+=======
+  }*/
+>>>>>>> origin
 }
