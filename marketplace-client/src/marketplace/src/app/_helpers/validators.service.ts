@@ -31,6 +31,16 @@ export function validateBirthday(control: AbstractControl): void {
   }
 }
 
+export function validateShippingDate(control: AbstractControl): void {
+  const shippingDate = control.get('shippingDate');
+  let shippDate = new Date(
+    shippingDate?.value.replace('T', ' ').replace(/-/g, '/')
+  );
+  if (new Date().getTime() - shippDate.getTime() < 0) {
+    shippingDate?.setErrors({ InvalidDate: true });
+  }
+}
+
 export function validateConfirmPassword(control: AbstractControl): void {
   const password = control.get('password')?.value;
   const confirmedPassword = control.get('confirmPassword')?.value;
