@@ -145,15 +145,10 @@ export class ProductService {
     return this.http.get<string[]>(`${baseUrl}/products/categories`);
   }
 
-<<<<<<< HEAD
-  getPriceRange(category:string): Observable<number[]> {
-    return this.http.get<number[]>(`${baseUrl}/products/price-range/`+category);
-=======
   getPriceRange(category: string): Observable<number[]> {
     return this.http.get<number[]>(
       `${baseUrl}/products/price-range/` + category
     );
->>>>>>> origin
   }
 
   getFirm(): Observable<string[]> {
@@ -203,10 +198,6 @@ export class ProductService {
   }
 
   AddProduct(product: Product): Observable<Product> {
-<<<<<<< HEAD
-    console.log(product);
-=======
->>>>>>> origin
     return this.http.post<Product>(`${baseUrl}/products`, product);
   }
 

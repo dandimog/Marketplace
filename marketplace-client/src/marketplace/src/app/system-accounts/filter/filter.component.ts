@@ -19,8 +19,8 @@ import { SystemAccountService } from 'src/app/_services/system-account.service';
 export class FilterComponent implements OnInit, OnDestroy {
   activeRadioButton = '';
   users: StaffMember[] = [];
-  type: string = 'all';
-  typeList: string[] = ['all', 'manager', 'courier'];
+  type: string = 'courier';
+  typeList: string[] = ['managers', 'couriers'];
   subscription!: Subscription;
   @Input() statusList: string[] = [];
   @Output() results: EventEmitter<any> = new EventEmitter<any>();
@@ -30,6 +30,7 @@ export class FilterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.activeRadioButton = this.getFilter();
     this.filterStatus(this.activeRadioButton, true);
+    this.type = this.service.getType();
   }
 
   ngOnDestroy(): void {
@@ -63,5 +64,6 @@ export class FilterComponent implements OnInit, OnDestroy {
 
   setType(type: string): void {
     this.type = type;
+    this.service.changeType(type);
   }
 }

@@ -35,9 +35,9 @@ export class FilterComponent implements OnInit {
     ceil: 99999,
     showTicks: false,
   };
-  @Input() sort: string = "name";
+  @Input() sort: string = 'name';
   @Output() sortChange = new EventEmitter<string>();
-  @Input() direction: string = "ASC";
+  @Input() direction: string = 'ASC';
   @Output() directionChange = new EventEmitter<string>();
   @Output() results: EventEmitter<any> = new EventEmitter<any>();
 
@@ -88,9 +88,9 @@ export class FilterComponent implements OnInit {
     this.filter(this.filters, false, true);
   }
 
-  setPrice():void {
-    this.filters.maxPrice=this.maxPrice;
-    this.filters.minPrice=this.minPrice;
+  setPrice(): void {
+    this.filters.maxPrice = this.maxPrice;
+    this.filters.minPrice = this.minPrice;
     this.filter(this.filters, false);
   }
 
@@ -122,24 +122,4 @@ export class FilterComponent implements OnInit {
   getProducts(): Product[] {
     return this.products;
   }
-
-  /*isPriceAsc(): boolean {
-    return this.filters.sort === 'price' && this.filters.direction === 'ASC';
-  }
-
-  isPriceDesc(): boolean {
-    return this.filters.sort === 'price' && this.filters.direction === 'DESC';
-  }
-
-  isNameAsc(): boolean {
-    return this.filters.sort === 'name' && this.filters.direction === 'ASC';
-  }
-
-  isNameDesc(): boolean {
-    return this.filters.sort === 'name' && this.filters.direction === 'DESC';
-<<<<<<< HEAD
-  }
-=======
-  }*/
->>>>>>> origin
 }

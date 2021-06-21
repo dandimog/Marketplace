@@ -1,5 +1,4 @@
 import { AbstractControl } from '@angular/forms';
-//import * as moment from 'moment';
 
 export function validateBirthday(control: AbstractControl): void {
   const ALLOWED_AGE_YEARS = 18;
