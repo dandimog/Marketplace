@@ -34,7 +34,6 @@ export class AuthService {
       return false;
     }
     const decodedToken = decode<Token>(token);
-    console.log(decodedToken.authorities[0]+ " " + expectedRole);
     return decodedToken.authorities[0] ==  expectedRole;
   }
 

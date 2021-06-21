@@ -68,7 +68,6 @@ export class AddProductComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('date' + this.d);
     this.firm();
     this.category();
   }
@@ -134,7 +133,6 @@ export class AddProductComponent implements OnInit {
       .pipe(first())
       .subscribe({
         next: (res) => {
-          console.log('Product added');
           this.router.navigateByUrl('/products/' + res.id);
           this.loading = false;
           this.registered = true;
@@ -144,7 +142,6 @@ export class AddProductComponent implements OnInit {
           );
         },
         error: (error) => {
-          console.log(error);
           this.form.enable();
           this.loading = false;
           this.alertService.addAlert(
