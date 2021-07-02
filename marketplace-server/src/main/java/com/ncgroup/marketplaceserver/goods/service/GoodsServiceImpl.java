@@ -5,6 +5,8 @@ import com.ncgroup.marketplaceserver.file.service.MediaService;
 import com.ncgroup.marketplaceserver.goods.exceptions.GoodAlreadyExistsException;
 import com.ncgroup.marketplaceserver.goods.model.Good;
 import com.ncgroup.marketplaceserver.goods.model.GoodDto;
+import com.ncgroup.marketplaceserver.goods.model.ModelView;
+import com.ncgroup.marketplaceserver.goods.model.RequestParams;
 import com.ncgroup.marketplaceserver.goods.repository.GoodsRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,12 +24,11 @@ import java.util.*;
 @PropertySource("classpath:application.properties")
 public class GoodsServiceImpl implements GoodsService {
 
-
     @Value("${page.capacity}")
     private Integer PAGE_CAPACITY;
 
-    private GoodsRepository repository;
-    private MediaService mediaService;
+    private final GoodsRepository repository;
+    private final MediaService mediaService;
 
     @Autowired
     public GoodsServiceImpl(GoodsRepository repository, MediaService mediaService) {
@@ -38,15 +39,12 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public Good create(GoodDto goodDto) throws GoodAlreadyExistsException {
         String newImage = goodDto.getImage();
-        if (!newImage.isEmpty()){
+
+        if (newImage != null && !newImage.isEmpty()) {
+
             goodDto.setImage(this.mediaService.confirmUpload(newImage));
         }
-
-        Long goodId = repository.createGood(goodDto); // get the id of new good if it is new
-        Good good = new Good();
-        good.setProperties(goodDto, goodId);
-        good.setImage(mediaService.getCloudStorage().getResourceUrl(good.getImage()));
-        return good;
+        return new Good(goodDto, repository.getGoodId(goodDto), mediaService);
     }
 
     @Override
@@ -54,142 +52,131 @@ public class GoodsServiceImpl implements GoodsService {
         Good good = this.findById(id); // pull the good object if exists
 
         String newImage = goodDto.getImage();
-        if (!newImage.isEmpty()) {
+
+        if (newImage != null && !newImage.isEmpty()) {
             String oldImage = good.getImage();
             if (!oldImage.isEmpty() && !oldImage.equals(newImage)) {
                 goodDto.setImage(this.mediaService.confirmUpload(newImage));
-                log.info("Deleting old image");
                 mediaService.delete(oldImage);
             }
         }
-        good.setProperties(goodDto, id);
-        repository.editGood(goodDto, id); // push the changed good object
-        good.setImage(mediaService.getCloudStorage().getResourceUrl(good.getImage()));
 
+        repository.editGood(goodDto, id); // push the changed good object
+        good.setProperties(goodDto, id, mediaService);
         return good;
     }
 
     @Override
     public Good find(long id) throws NotFoundException {
         Good good = findById(id);
+        // fixme ???
         good.setImage(mediaService.getCloudStorage().getResourceUrl(good.getImage()));
         return good;
     }
 
-    private Good findById(long id) throws NotFoundException{
+    private Good findById(long id) throws NotFoundException {
         Optional<Good> goodOptional = repository.findById(id);
-        return goodOptional.orElseThrow(() -> new NotFoundException("Product with " + id + " not found."));
+        return goodOptional.orElseThrow(() ->
+                new NotFoundException("Product with " + id + " not found."));
     }
 
     @Override
-    public Map<String, Object> display
-            (String name, String category, String minPrice, String maxPrice,
-             String sortBy, String sortDirection, Integer page) throws NotFoundException {
+    public ModelView display(RequestParams params) throws NotFoundException {
 
-        int counter = 0;
-        List<String> concatenator = new ArrayList<>();
+        List<String> conditions = new ArrayList<>();
 
+        StringJoiner fromQuery = new StringJoiner(" ");
+        fromQuery.add(
+                "FROM goods INNER JOIN product ON goods.prod_id = product.id " +
+                        "INNER JOIN firm ON goods.firm_id = firm.id " +
+                        "INNER JOIN category ON category.id = product.category_id");
 
-        StringBuilder fromQuery = new StringBuilder("FROM goods INNER JOIN " +
-                "product ON goods.prod_id = product.id " +
-                "INNER JOIN firm ON goods.firm_id = firm.id " +
-                "INNER JOIN category ON category.id = product.category_id");
+        log.info(fromQuery.toString());
 
-//        log.info("Name " + name);;
-        if (name != null) {
-            concatenator.add(" product.name LIKE '%" + name.toLowerCase() + "%'");
-            counter++;
+        if (params.getName() != null) {
+            conditions.add("UPPER(product.name) LIKE UPPER(:name)");
         }
 
-        if (category != null && !category.equals("all")) {
-            concatenator.add(" category.name = " + "'" + category + "'");
-            counter++;
+        if (params.getCategory() != null && !params.getCategory().equals("all")) {
+            conditions.add("category.name = :category");
         }
 
-        if (minPrice != null) {
-            concatenator.add(" price - price*discount/100 >= " + minPrice);
-            counter++;
+        if (params.getMinPrice() != null) {
+            conditions.add("price - price*discount/100 >= :minPrice");
         }
 
-        if (maxPrice != null) {
-            concatenator.add(" price - price*discount/100 <= " + maxPrice);
-            counter++;
+        if (params.getMaxPrice() != null) {
+            conditions.add("price - price*discount/100 <= :maxPrice");
         }
 
+        StringJoiner whereStatement = new StringJoiner(" AND ");
 
-        if (counter > 0) {
-            fromQuery.append(" WHERE").append(concatenator.get(0));
-            for (int i = 1; i < counter; i++) {
-                fromQuery.append(" AND").append(concatenator.get(i));
+        if (!conditions.isEmpty()) {
+            fromQuery.add("WHERE");
+            for (String condition : conditions) {
+                whereStatement.add(condition);
             }
         }
 
-        fromQuery.append(" AND status = true");
+        log.info(whereStatement.toString());
+        fromQuery.merge(whereStatement);
+        fromQuery.add("AND status = true");
 
-        int numOfGoods = repository.countGoods("SELECT COUNT(*) " + fromQuery);
+        int numOfGoods = repository
+                .countGoods("SELECT COUNT(*) " + fromQuery, params);
 
-        if (sortBy != null) {
-            switch (sortBy) {
-                case "price":
-                    fromQuery.append(" ORDER BY goods.price");
+        if (params.getSort() != null) {
+            switch (params.getSort()) {
+                case PRICE:
+                    fromQuery.add("ORDER BY goods.price");
                     break;
-                case "name":
-                    fromQuery.append(" ORDER BY product.name");
+                case DATE:
+                    fromQuery.add("ORDER BY shipping_date");
                     break;
-                case "date":
-                    fromQuery.append(" ORDER BY shipping_date");
-                    break;
+                default:
+                    fromQuery.add("ORDER BY product.name");
             }
         } else {
-            fromQuery.append(" ORDER BY product.name");
+            fromQuery.add("ORDER BY product.name");
         }
 
-        log.info("DIRECTION " + sortDirection);
-        if (sortDirection != null) {
-            fromQuery.append(" ").append(sortDirection.toUpperCase());
+        if (params.getDirection() != null && params.getDirection().equals("ASC")) {
+            fromQuery.add("ASC");
         } else {
-            fromQuery.append(" DESC");
+            fromQuery.add("DESC");
         }
 
-
-        StringBuilder flexibleQuery = new StringBuilder
-                ("SELECT goods.id, product.name AS product_name, status, shipping_date, " +
+        StringJoiner flexibleQuery = new StringJoiner(" ");
+        flexibleQuery.add(
+                "SELECT goods.id, product.name AS product_name, status, shipping_date, " +
                         "firm.name AS firm_name, category.name AS category_name, unit, " +
-                        " goods.quantity, goods.price, goods.discount, goods.in_stock," +
-                        " goods.description, goods.image ");
-
-
-        flexibleQuery.append(fromQuery);
-
+                        "goods.quantity, goods.price, goods.discount, goods.in_stock, " +
+                        "goods.description, goods.image");
+        flexibleQuery.merge(fromQuery);
 
         int numOfPages = numOfGoods % PAGE_CAPACITY == 0 ?
                 numOfGoods / PAGE_CAPACITY : (numOfGoods / PAGE_CAPACITY) + 1;
 
-        if (page != null) {
-            flexibleQuery.append(" LIMIT ").append(PAGE_CAPACITY).append(" OFFSET ")
-                    .append((page - 1) * PAGE_CAPACITY);
+        if (params.getPage() != null) {
+            flexibleQuery.add("LIMIT :PAGE_CAPACITY OFFSET (:page - 1) * :PAGE_CAPACITY");
         } else {
-            flexibleQuery.append(" LIMIT ").append(PAGE_CAPACITY);
-            page = 1;
+            flexibleQuery.add("LIMIT :PAGE_CAPACITY");
+            params.setPage(1);
         }
 
-        List<Good> res = repository.display(flexibleQuery.toString());
+        List<Good> res = repository.display(flexibleQuery.toString(), params);
+
         if (res.isEmpty()) {
-            throw new NotFoundException
-                    ("Sorry, but there are no products corresponding to your criteria.");
+            throw new NotFoundException("Sorry, but there are no products corresponding to your criteria.");
         }
 
         for (Good good : res) {
-            good.setImage(mediaService.getCloudStorage().getResourceUrl(good.getImage()));
+            // fixme
+            good.setImage(good.getImage(), mediaService);
         }
 
+        return new ModelView(params.getPage(), numOfPages, res);
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("current", page);
-        response.put("total", numOfPages);
-        response.put("result_set", res);
-
-        return response;
     }
 
     @Override
@@ -199,8 +186,8 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Override
     public List<Double> getPriceRange(String category) throws NotFoundException {
-        ArrayList<Double> priceRange = new ArrayList<>();
-        if(category.equals("all")){
+        ArrayList<Double> priceRange = new ArrayList<>(2);
+        if (category.equals("all")) {
             priceRange.add(repository.getTotalMinPrice());
             priceRange.add(repository.getTotalMaxPrice());
             return priceRange;
@@ -216,7 +203,8 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    public void updateQuantity(long id, int quantity) {
-        repository.editQuantity(id, quantity);
+    public void updateQuantity(long id, double quantity) {
+        // check
+        repository.editQuantity(id, quantity, Double.compare(quantity, 0) != 0);
     }
 }

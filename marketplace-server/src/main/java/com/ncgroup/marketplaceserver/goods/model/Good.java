@@ -11,25 +11,25 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Data
 @Builder
 @AllArgsConstructor
-@Slf4j
 public class Good {
 
     private long id;
     private String goodName;
     private String firmName;
-    private int quantity;
+    private double quantity;
     private double price;
 
     private Unit unit;
 
     private double discount;
 
-    private LocalDateTime shippingDate;
+    private OffsetDateTime shippingDate;
 
     private boolean inStock;
     private String description;
@@ -37,12 +37,9 @@ public class Good {
     private String image;
     private boolean status;
 
-    public Good() {
-        this.setStatus(true);
-    }
 
-//    , MediaService mediaService
-    public void setProperties(GoodDto goodDto, Long id) {
+    public Good(GoodDto goodDto, Long id, MediaService mediaService) {
+        this.setStatus(true);
         this.setId(id);
         this.setShippingDate(goodDto.getShippingDate());
         this.setUnit(goodDto.getUnit());
@@ -54,7 +51,26 @@ public class Good {
         this.setInStock(goodDto.isInStock());
         this.setDescription(goodDto.getDescription());
         this.setCategoryName(goodDto.getCategoryName().toLowerCase());
-        this.setImage(goodDto.getImage());
+        this.setImage(goodDto.getImage(), mediaService);
+    }
+
+    public void setImage(String image, MediaService mediaService) {
+        this.image = mediaService.getCloudStorage().getResourceUrl(image);
+    }
+
+    public void setProperties(GoodDto goodDto, Long id, MediaService mediaService) {
+        this.setId(id);
+        this.setShippingDate(goodDto.getShippingDate());
+        this.setUnit(goodDto.getUnit());
+        this.setGoodName(goodDto.getGoodName().toLowerCase());
+        this.setFirmName(goodDto.getFirmName().toLowerCase());
+        this.setQuantity(goodDto.getQuantity());
+        this.setPrice(goodDto.getPrice());
+        this.setDiscount(goodDto.getDiscount());
+        this.setInStock(goodDto.isInStock());
+        this.setDescription(goodDto.getDescription());
+        this.setCategoryName(goodDto.getCategoryName().toLowerCase());
+        this.setImage(goodDto.getImage(), mediaService);
         this.setStatus(goodDto.isStatus());
     }
 
